@@ -6,11 +6,11 @@
 
 ### 🎯 Core Concept
 
-ImpactBridge is a dynamic platform designed to connect impact-driven businesses with a supportive ecosystem of investors, mentors, and service providers. Our mission is to transcend traditional funding marketplaces by creating an inclusive, globally interconnected support network for entrepreneurship.
+ImpactBridge is a platform that connects impact-driven businesses with a supportive ecosystem of investors/mentors. Our mission is to create an inclusive, globally interconnected support network for entrepreneurship, transcending traditional funding marketplaces.
 
 ### 🚀 Platform Vision
 
-At the heart of ImpactBridge lies a simple yet powerful idea: Every local business has a global potential. We bridge the gap between community-driven ventures and worldwide opportunities by providing:
+We believe every local business has global potential. ImpactBridge bridges the gap between community-driven ventures and worldwide opportunities by providing:
 
 - 🤝 Direct Relationship Building
 - 💡 Strategic Guidance
@@ -24,7 +24,7 @@ Our 48-hour hackathon MVP focuses on core functionality to validate the platform
 #### Key Features
 - 👤 User Authentication (Signup/Login)
 - 🏢 Business Profile Creation
-- 🔍 Investor & Mentor Directory
+- 🔍 Investor Directory
 - 📄 Pitch Deck Upload
 - 🤲 "Express Interest" Matching System
 
@@ -67,8 +67,8 @@ impactbridge/
 
 1. Clone the repository
 ```bash
-git clone https://github.com/yourusername/impactbridge.git
-cd impactbridge
+git clone https://github.com/Philip38-hub/impact-bridge.git
+cd impact-bridge
 ```
 
 2. Setup Backend
@@ -103,6 +103,13 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 ### 💡 Vision Statement
 
 ImpactBridge isn't just a platform—it's a movement. We believe that by connecting local authenticity with global opportunity, we can create a more equitable, sustainable entrepreneurial ecosystem.
+
+### Project Goals
+
+- To connect impact-driven businesses with investors, mentors, and service providers.
+- To create a globally interconnected support network for entrepreneurship.
+- To bridge the gap between local ventures and global opportunities.
+- To provide a platform for direct relationship building, strategic guidance, funding pathways, and global market access.
 
 ---
 
