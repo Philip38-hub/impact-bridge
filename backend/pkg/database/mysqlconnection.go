@@ -14,13 +14,13 @@ import (
 )
 
 func NewMySQLConnection() (*gorm.DB, error) {
-	// Construct DSN (Data Source Name) for MySQL
+	// Use the working DSN format from db.go
 	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local",
-		os.Getenv("DB_USER"),
-		os.Getenv("DB_PASSWORD"),
-		os.Getenv("DB_HOST"),
-		os.Getenv("DB_PORT"),
-		os.Getenv("DB_NAME"),
+		os.Getenv("DB_USER"),     // hack
+		os.Getenv("DB_PASSWORD"), // My_pass2
+		os.Getenv("DB_HOST"),     // msheesh.webhop.me
+		os.Getenv("DB_PORT"),     // 3306
+		os.Getenv("DB_NAME"),     // impact_bridge
 	)
 
 	// Create custom logger
@@ -33,7 +33,7 @@ func NewMySQLConnection() (*gorm.DB, error) {
 		},
 	)
 
-	// Open connection to MySQL database with custom logger
+	// Open connection
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{
 		Logger: newLogger,
 	})
@@ -41,26 +41,39 @@ func NewMySQLConnection() (*gorm.DB, error) {
 		return nil, fmt.Errorf("failed to connect to database: %v", err)
 	}
 
-	// Connection pool configuration
+	// Test connection (similar to Ping() in db.go)
 	sqlDB, err := db.DB()
 	if err != nil {
-		return nil, fmt.Errorf("failed to configure database connection pool: %v", err)
+		return nil, err
 	}
+	if err := sqlDB.Ping(); err != nil {
+		return nil, err
+	}
+	fmt.Println("Connected to MySQL!")
 
-	// SetMaxIdleConns sets the maximum number of connections in the idle connection pool.
+	// Connection pool settings
 	sqlDB.SetMaxIdleConns(10)
-
-	// SetMaxOpenConns sets the maximum number of open connections to the database.
 	sqlDB.SetMaxOpenConns(100)
-
-	// SetConnMaxLifetime sets the maximum amount of time a connection may be reused.
 	sqlDB.SetConnMaxLifetime(time.Hour)
 
-	// AutoMigrate will create the table if it doesn't exist
+	// Auto-migrate schemas
 	err = db.AutoMigrate(&models.BusinessModel{})
 	if err != nil {
 		return nil, fmt.Errorf("failed to auto-migrate database: %v", err)
 	}
+
+	// Optional: Add test data insertion (like in db.go)
+	// This should probably be moved to a separate seed function
+	/*
+		result := db.Create(&models.BusinessModel{
+			Name: "Test Business",
+			Email: "test@example.com",
+			// ... other fields
+		})
+		if result.Error != nil {
+			log.Printf("Warning: Could not insert test data: %v", result.Error)
+		}
+	*/
 
 	return db, nil
 }

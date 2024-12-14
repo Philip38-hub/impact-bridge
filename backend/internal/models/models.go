@@ -31,4 +31,14 @@ type BusinessModel struct {
 	// Metadata
 	FoundedAt time.Time `json:"founded_at"`
 	UserID    uint      `json:"user_id"`
+
+	// Impact Metrics
+	SDGAlignment        []string `json:"sdg_alignment" gorm:"type:json"`
+	JobsCreated         int      `json:"jobs_created"`
+	LocalEmploymentRate float64  `json:"local_employment_rate" gorm:"type:decimal(5,2)"`
+	ImpactScore         float64  `json:"impact_score" gorm:"type:decimal(5,2)"`
+
+	// Environmental Impact
+	EnvironmentalInitiatives string  `json:"environmental_initiatives" gorm:"type:text"`
+	CarbonFootprintReduction float64 `json:"carbon_footprint_reduction" gorm:"type:decimal(10,2)"`
 }

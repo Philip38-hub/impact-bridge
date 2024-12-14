@@ -5,25 +5,21 @@ import (
 	"strconv"
 
 	"impactbridge/internal/models"
-	"impactbridge/internal/repository"
 	"impactbridge/internal/service"
 
 	"github.com/gin-gonic/gin"
-	"gorm.io/gorm"
 )
 
-type BusinessHandler struct {
-	service *service.BusinessService
+type ImpactHandler struct {
+	service *service.ImpactService
 }
 
-func NewBusinessHandler(db *gorm.DB) *BusinessHandler {
-	repo := repository.NewBusinessRepository(db)
-	srv := service.NewBusinessService(repo)
-	return &BusinessHandler{service: srv}
+func NewImpactHandler(service *service.ImpactService) *ImpactHandler {
+	return &ImpactHandler{service: service}
 }
 
-func (h *BusinessHandler) CreateBusiness(c *gin.Context) {
-	var business models.BusinessModel
+func (h *ImpactHandler) CreateBusiness(c *gin.Context) {
+	var business models.ImpactBusinessModel
 	if err := c.ShouldBindJSON(&business); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -37,7 +33,7 @@ func (h *BusinessHandler) CreateBusiness(c *gin.Context) {
 	c.JSON(http.StatusCreated, business)
 }
 
-func (h *BusinessHandler) GetBusinessByID(c *gin.Context) {
+func (h *ImpactHandler) GetBusinessByID(c *gin.Context) {
 	id, err := strconv.ParseUint(c.Param("id"), 10, 64)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid ID"})
@@ -53,16 +49,22 @@ func (h *BusinessHandler) GetBusinessByID(c *gin.Context) {
 	c.JSON(http.StatusOK, business)
 }
 
-func (h *BusinessHandler) ListBusinesses(c *gin.Context) {
-	// Parse query parameters for filtering
+func (h *ImpactHandler) ListBusinesses(c *gin.Context) {
 	filters := make(map[string]interface{})
+
+	// Parse impact-specific filters
+	if minScore := c.Query("min_score"); minScore != "" {
+		if score, err := strconv.ParseFloat(minScore, 64); err == nil {
+			filters["min_impact_score"] = score
+		}
+	}
 
 	if sector := c.Query("sector"); sector != "" {
 		filters["sector"] = sector
 	}
 
-	if stage := c.Query("stage"); stage != "" {
-		filters["business_stage"] = stage
+	if sdgs := c.QueryArray("sdg"); len(sdgs) > 0 {
+		filters["sdg_alignment"] = sdgs
 	}
 
 	businesses, err := h.service.ListBusinesses(filters)
@@ -74,14 +76,14 @@ func (h *BusinessHandler) ListBusinesses(c *gin.Context) {
 	c.JSON(http.StatusOK, businesses)
 }
 
-func (h *BusinessHandler) UpdateBusiness(c *gin.Context) {
+func (h *ImpactHandler) UpdateBusiness(c *gin.Context) {
 	id, err := strconv.ParseUint(c.Param("id"), 10, 64)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid ID"})
 		return
 	}
 
-	var business models.BusinessModel
+	var business models.ImpactBusinessModel
 	if err := c.ShouldBindJSON(&business); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -96,7 +98,7 @@ func (h *BusinessHandler) UpdateBusiness(c *gin.Context) {
 	c.JSON(http.StatusOK, business)
 }
 
-func (h *BusinessHandler) DeleteBusiness(c *gin.Context) {
+func (h *ImpactHandler) DeleteBusiness(c *gin.Context) {
 	id, err := strconv.ParseUint(c.Param("id"), 10, 64)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid ID"})

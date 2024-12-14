@@ -44,3 +44,22 @@ func (r *BusinessRepository) List(filters map[string]interface{}) ([]models.Busi
 	err := query.Find(&businesses).Error
 	return businesses, err
 }
+
+func (r *BusinessRepository) ListByImpactCriteria(filters map[string]interface{}) ([]models.BusinessModel, error) {
+	var businesses []models.BusinessModel
+	query := r.db
+
+	if minImpact, ok := filters["min_impact_score"].(float64); ok {
+		query = query.Where("impact_score >= ?", minImpact)
+	}
+
+	if sdgs, ok := filters["sdg_alignment"].([]string); ok {
+		query = query.Where("sdg_alignment @> ?", sdgs)
+	}
+
+	if err := query.Find(&businesses).Error; err != nil {
+		return nil, err
+	}
+
+	return businesses, nil
+}
