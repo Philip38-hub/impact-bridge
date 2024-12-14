@@ -1,5 +1,8 @@
 Research and insights
 
+problem statement:
+Many social enterprises in Kenya, estimated at approximately 44,000, struggle to secure sufficient capital beyond their initial funding stages, with 54% citing access to capital as their primary challenge. Despite the impact investment market showing strong growth, with a 26% increase over the past year, indicating rising interest in funding social enterprises, these businesses often face barriers due to ineffective information presentation and inefficient communication channels. This lack of streamlined communication not only deters potential funding but also stifles the growth of the social enterprise ecosystem, which plays a crucial role in addressing social and economic challenges in the country.
+
 In Kenya, SMEs are defined based on annual turnover and the number of employees, with many social enterprises meeting these criteria.As part of the SME sector, social enterprises contribute significantly to job creation and economic development. They often operate in sectors such as agriculture, healthcare, and renewable energy, which are critical for addressing societal challenges 15.
 
 Social enterprises in Kenya generate revenue through a variety of innovative strategies that align with their social missions while ensuring financial sustainability.
