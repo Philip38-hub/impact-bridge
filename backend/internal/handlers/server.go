@@ -5,21 +5,17 @@ import (
 	"strconv"
 
 	"impactbridge/internal/models"
-	"impactbridge/internal/repository"
 	"impactbridge/internal/service"
 
 	"github.com/gin-gonic/gin"
-	"gorm.io/gorm"
 )
 
 type BusinessHandler struct {
 	service *service.BusinessService
 }
 
-func NewBusinessHandler(db *gorm.DB) *BusinessHandler {
-	repo := repository.NewBusinessRepository(db)
-	srv := service.NewBusinessService(repo)
-	return &BusinessHandler{service: srv}
+func NewBusinessHandler(service *service.BusinessService) *BusinessHandler {
+	return &BusinessHandler{service: service}
 }
 
 func (h *BusinessHandler) CreateBusiness(c *gin.Context) {

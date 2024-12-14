@@ -6,6 +6,22 @@ import (
 	"gorm.io/gorm"
 )
 
+// User represents a user in the system
+type User struct {
+	gorm.Model
+	Email        string    `json:"email" gorm:"type:varchar(255);uniqueIndex;not null"`
+	Password     string    `json:"-" gorm:"type:varchar(255)"` // "-" means don't show in JSON
+	GoogleID     string    `json:"googleId" gorm:"type:varchar(255);uniqueIndex"`
+	UserType     string    `json:"userType" gorm:"type:enum('startup','investor');not null"`
+	StartupName  string    `json:"startupName" gorm:"type:varchar(255)"`
+	FounderName  string    `json:"founderName" gorm:"type:varchar(255)"`
+	Name         string    `json:"name" gorm:"type:varchar(255)"`
+	Industry     string    `json:"industry" gorm:"type:varchar(255)"`
+	Description  string    `json:"description" gorm:"type:text"`
+	FundingNeeded string   `json:"fundingNeeded" gorm:"type:varchar(255)"`
+	CreatedAt    time.Time `json:"createdAt" gorm:"default:CURRENT_TIMESTAMP"`
+}
+
 type BusinessModel struct {
 	gorm.Model
 	Name          string `json:"name" gorm:"type:varchar(255);not null"`

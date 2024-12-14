@@ -5,6 +5,9 @@ import (
 	"os"
 
 	"impactbridge/internal/handlers"
+	"impactbridge/internal/middleware"
+	"impactbridge/internal/repository"
+	"impactbridge/internal/service"
 	"impactbridge/pkg/database"
 
 	"github.com/gin-gonic/gin"
@@ -23,6 +26,19 @@ func main() {
 		log.Fatalf("Failed to connect to database: %v", err)
 	}
 
+	// Initialize repositories
+	userRepo := repository.NewUserRepository(db)
+	businessRepo := repository.NewBusinessRepository(db)
+
+	// Initialize services
+	userService := service.NewUserService(userRepo)
+	businessService := service.NewBusinessService(businessRepo)
+
+	// Initialize handlers
+	authHandler := handlers.NewAuthHandler(userService)
+	userHandler := handlers.NewUserHandler(userService)
+	businessHandler := handlers.NewBusinessHandler(businessService)
+
 	// Setup Gin router
 	r := gin.Default()
 
@@ -39,15 +55,40 @@ func main() {
 		c.Next()
 	})
 
-	// Business Model Routes
-	businessHandler := handlers.NewBusinessHandler(db)
+	// API Routes
 	v1 := r.Group("/api/v1")
 	{
-		v1.POST("/businesses", businessHandler.CreateBusiness)
-		v1.GET("/businesses", businessHandler.ListBusinesses)
-		v1.GET("/businesses/:id", businessHandler.GetBusinessByID)
-		v1.PUT("/businesses/:id", businessHandler.UpdateBusiness)
-		v1.DELETE("/businesses/:id", businessHandler.DeleteBusiness)
+		// Auth routes (no auth required)
+		auth := v1.Group("/users")
+		{
+			auth.POST("/signup/startup", authHandler.SignupStartup)
+			auth.POST("/signup/investor", authHandler.SignupInvestor)
+			auth.POST("/login", authHandler.Login)
+		}
+
+		// Protected routes (auth required)
+		protected := v1.Group("")
+		protected.Use(middleware.AuthMiddleware())
+		{
+			// User routes
+			users := protected.Group("/users")
+			{
+				users.GET("/profile", userHandler.GetUserProfile)
+				users.PUT("/profile", userHandler.UpdateUserProfile)
+				users.GET("/:id", userHandler.GetUserByID)
+				users.GET("", userHandler.ListUsers)
+			}
+
+			// Business routes
+			businesses := protected.Group("/businesses")
+			{
+				businesses.POST("", businessHandler.CreateBusiness)
+				businesses.GET("", businessHandler.ListBusinesses)
+				businesses.GET("/:id", businessHandler.GetBusinessByID)
+				businesses.PUT("/:id", businessHandler.UpdateBusiness)
+				businesses.DELETE("/:id", businessHandler.DeleteBusiness)
+			}
+		}
 	}
 
 	// Start server
