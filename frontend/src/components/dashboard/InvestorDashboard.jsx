@@ -10,11 +10,18 @@ import {
   CircularProgress,
   Chip,
   Avatar,
+  Paper,
+  IconButton,
+  Tooltip,
+  Divider,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import BusinessIcon from '@mui/icons-material/Business';
 import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
 import CategoryIcon from '@mui/icons-material/Category';
+import TrendingUpIcon from '@mui/icons-material/TrendingUp';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import ShareIcon from '@mui/icons-material/Share';
 import { useAuth } from '../../contexts/AuthContext';
 import StartupContactModal from '../contact/StartupContactModal';
 import axios from 'axios';
@@ -26,31 +33,64 @@ const StyledContainer = styled(Container)(({ theme }) => ({
   paddingBottom: theme.spacing(4),
 }));
 
-const WelcomeSection = styled(Box)(({ theme }) => ({
-  marginBottom: theme.spacing(4),
-}));
-
-const DashboardCard = styled(Card)(({ theme }) => ({
-  height: '100%',
-  display: 'flex',
-  flexDirection: 'column',
+const GlassmorphicCard = styled(Paper)(({ theme }) => ({
+  background: 'rgba(255, 255, 255, 0.9)',
+  backdropFilter: 'blur(10px)',
+  borderRadius: theme.spacing(2),
+  padding: theme.spacing(3),
+  boxShadow: '0 8px 32px 0 rgba(31, 38, 135, 0.15)',
+  border: '1px solid rgba(255, 255, 255, 0.18)',
   transition: 'transform 0.2s ease, box-shadow 0.2s ease',
   '&:hover': {
     transform: 'translateY(-4px)',
-    boxShadow: theme.shadows[4],
+    boxShadow: '0 12px 40px 0 rgba(31, 38, 135, 0.20)',
   },
 }));
 
-const StatCard = styled(Card)(({ theme }) => ({
-  padding: theme.spacing(2),
+const WelcomeSection = styled(Box)(({ theme }) => ({
+  marginBottom: theme.spacing(4),
+  textAlign: 'center',
+  padding: theme.spacing(4, 0),
+}));
+
+const StatCard = styled(GlassmorphicCard)(({ theme }) => ({
+  padding: theme.spacing(3),
   textAlign: 'center',
   height: '100%',
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
   justifyContent: 'center',
-  backgroundColor: theme.palette.primary.main,
-  color: theme.palette.primary.contrastText,
+  background: 'linear-gradient(135deg, #008080 0%, #006666 100%)',
+  color: '#fff',
+  minHeight: 160,
+}));
+
+const StartupCard = styled(GlassmorphicCard)(({ theme }) => ({
+  height: '100%',
+  display: 'flex',
+  flexDirection: 'column',
+  padding: theme.spacing(2),
+}));
+
+const StyledChip = styled(Chip)(({ theme }) => ({
+  margin: theme.spacing(0.5),
+  borderRadius: theme.spacing(2),
+  '&.MuiChip-outlined': {
+    borderColor: theme.palette.primary.main,
+    color: theme.palette.primary.main,
+  },
+}));
+
+const ActionButton = styled(Button)(({ theme }) => ({
+  textTransform: 'none',
+  borderRadius: theme.spacing(3),
+  padding: theme.spacing(1, 3),
+  fontWeight: 600,
+  boxShadow: 'none',
+  '&:hover': {
+    boxShadow: '0 4px 12px rgba(0, 128, 128, 0.2)',
+  },
 }));
 
 const InvestorDashboard = () => {
@@ -63,7 +103,8 @@ const InvestorDashboard = () => {
   const [stats, setStats] = useState({
     totalStartups: 0,
     matchingStartups: 0,
-    totalInvestmentNeeded: 0
+    totalInvestmentNeeded: 0,
+    averageValuation: 0
   });
 
   useEffect(() => {
@@ -83,13 +124,19 @@ const InvestorDashboard = () => {
           user.interests.includes(startup.industry)
         );
         
+        const totalValuation = filteredStartups.reduce((sum, startup) => 
+          sum + (startup.valuation || 0), 0
+        );
+        
         setStartups(filteredStartups);
         setStats({
           totalStartups: response.data.length,
           matchingStartups: filteredStartups.length,
           totalInvestmentNeeded: filteredStartups.reduce((sum, startup) => 
-            sum + startup.fundingNeeded, 0
-          )
+            sum + (startup.fundingNeeded || 0), 0
+          ),
+          averageValuation: filteredStartups.length ? 
+            Math.round(totalValuation / filteredStartups.length) : 0
         });
         setError(null);
       } catch (err) {
@@ -110,7 +157,7 @@ const InvestorDashboard = () => {
   if (loading) {
     return (
       <Box display="flex" justifyContent="center" alignItems="center" minHeight="60vh">
-        <CircularProgress />
+        <CircularProgress size={60} thickness={4} sx={{ color: '#008080' }} />
       </Box>
     );
   }
@@ -118,7 +165,7 @@ const InvestorDashboard = () => {
   if (error) {
     return (
       <Box display="flex" justifyContent="center" alignItems="center" minHeight="60vh">
-        <Typography color="error">{error}</Typography>
+        <Typography color="error" variant="h6">{error}</Typography>
       </Box>
     );
   }
@@ -127,7 +174,7 @@ const InvestorDashboard = () => {
     <StyledContainer maxWidth="lg">
       <WelcomeSection>
         <Typography
-          variant="h4"
+          variant="h3"
           sx={{
             fontFamily: 'Montserrat, sans-serif',
             fontWeight: 700,
@@ -138,100 +185,155 @@ const InvestorDashboard = () => {
           Welcome back, {user.name}!
         </Typography>
         <Typography
-          variant="subtitle1"
+          variant="h6"
           sx={{
             color: '#666',
-            fontFamily: 'Roboto, sans-serif',
+            fontFamily: 'Poppins, sans-serif',
+            maxWidth: '800px',
+            margin: '0 auto',
           }}
         >
-          Discover and connect with promising startups in your preferred industries
+          Your personalized dashboard for discovering and connecting with promising startups
         </Typography>
       </WelcomeSection>
 
       {/* Stats Section */}
-      <Grid container spacing={3} sx={{ mb: 4 }}>
-        <Grid item xs={12} sm={4}>
+      <Grid container spacing={3} sx={{ mb: 6 }}>
+        <Grid item xs={12} sm={6} md={3}>
           <StatCard>
-            <BusinessIcon sx={{ fontSize: 40, mb: 1 }} />
-            <Typography variant="h4">{stats.totalStartups}</Typography>
-            <Typography>Total Startups</Typography>
+            <BusinessIcon sx={{ fontSize: 48, mb: 2 }} />
+            <Typography variant="h4" sx={{ fontWeight: 700 }}>{stats.totalStartups}</Typography>
+            <Typography variant="subtitle1">Total Startups</Typography>
           </StatCard>
         </Grid>
-        <Grid item xs={12} sm={4}>
+        <Grid item xs={12} sm={6} md={3}>
           <StatCard>
-            <CategoryIcon sx={{ fontSize: 40, mb: 1 }} />
-            <Typography variant="h4">{stats.matchingStartups}</Typography>
-            <Typography>Matching Your Interests</Typography>
+            <CategoryIcon sx={{ fontSize: 48, mb: 2 }} />
+            <Typography variant="h4" sx={{ fontWeight: 700 }}>{stats.matchingStartups}</Typography>
+            <Typography variant="subtitle1">Matching Interests</Typography>
           </StatCard>
         </Grid>
-        <Grid item xs={12} sm={4}>
+        <Grid item xs={12} sm={6} md={3}>
           <StatCard>
-            <MonetizationOnIcon sx={{ fontSize: 40, mb: 1 }} />
-            <Typography variant="h4">${stats.totalInvestmentNeeded.toLocaleString()}</Typography>
-            <Typography>Total Investment Needed</Typography>
+            <MonetizationOnIcon sx={{ fontSize: 48, mb: 2 }} />
+            <Typography variant="h4" sx={{ fontWeight: 700 }}>
+              ${(stats.totalInvestmentNeeded / 1000000).toFixed(1)}M
+            </Typography>
+            <Typography variant="subtitle1">Total Investment Needed</Typography>
+          </StatCard>
+        </Grid>
+        <Grid item xs={12} sm={6} md={3}>
+          <StatCard>
+            <TrendingUpIcon sx={{ fontSize: 48, mb: 2 }} />
+            <Typography variant="h4" sx={{ fontWeight: 700 }}>
+              ${(stats.averageValuation / 1000000).toFixed(1)}M
+            </Typography>
+            <Typography variant="subtitle1">Average Valuation</Typography>
           </StatCard>
         </Grid>
       </Grid>
 
       {/* Preferences Section */}
-      <Box sx={{ mb: 4 }}>
-        <Typography variant="h6" sx={{ mb: 2 }}>Your Investment Preferences</Typography>
-        <Box display="flex" gap={1} flexWrap="wrap">
+      <GlassmorphicCard sx={{ mb: 6, py: 3 }}>
+        <Typography variant="h5" sx={{ mb: 3, fontWeight: 600, color: '#008080', px: 3 }}>
+          Your Investment Preferences
+        </Typography>
+        <Divider sx={{ mb: 3 }} />
+        <Box display="flex" gap={1} flexWrap="wrap" px={3}>
           {user.investmentPreferences.map((pref) => (
-            <Chip
+            <StyledChip
               key={pref}
               label={pref}
-              color="primary"
               variant="outlined"
             />
           ))}
         </Box>
-      </Box>
+      </GlassmorphicCard>
 
       {/* Matching Startups Section */}
-      <Typography variant="h6" sx={{ mb: 2 }}>Matching Startups</Typography>
+      <Typography variant="h5" sx={{ mb: 3, fontWeight: 600, color: '#008080' }}>
+        Matching Startups
+      </Typography>
       <Grid container spacing={3}>
         {startups.map((startup) => (
           <Grid item xs={12} sm={6} md={4} key={startup._id}>
-            <DashboardCard>
-              <CardContent>
-                <Box display="flex" alignItems="center" mb={2}>
-                  <Avatar sx={{ bgcolor: 'primary.main', mr: 2 }}>
-                    {startup.startupName[0]}
-                  </Avatar>
-                  <Typography variant="h6" noWrap>{startup.startupName}</Typography>
-                </Box>
-                <Typography color="textSecondary" gutterBottom>
-                  {startup.industry}
-                </Typography>
-                <Typography variant="body2" sx={{ mb: 2 }}>
-                  {startup.description}
-                </Typography>
-                <Box display="flex" justifyContent="space-between" alignItems="center">
-                  <Typography variant="subtitle2" color="primary">
-                    ${startup.fundingNeeded.toLocaleString()} needed
+            <StartupCard>
+              <Box display="flex" alignItems="center" mb={2}>
+                <Avatar 
+                  sx={{ 
+                    bgcolor: '#008080',
+                    width: 56,
+                    height: 56,
+                    mr: 2,
+                    fontSize: '1.5rem'
+                  }}
+                >
+                  {startup.startupName[0]}
+                </Avatar>
+                <Box>
+                  <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                    {startup.startupName}
                   </Typography>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    size="small"
-                    onClick={() => handleContactClick(startup)}
-                  >
-                    Invest Now
-                  </Button>
+                  <Typography variant="body2" color="text.secondary">
+                    {startup.industry}
+                  </Typography>
                 </Box>
-              </CardContent>
-            </DashboardCard>
+              </Box>
+              
+              <Divider sx={{ my: 2 }} />
+              
+              <Typography variant="body2" sx={{ mb: 2, minHeight: 60 }}>
+                {startup.description?.slice(0, 120)}...
+              </Typography>
+              
+              <Box sx={{ mt: 'auto' }}>
+                <Grid container spacing={2} alignItems="center">
+                  <Grid item xs={12}>
+                    <Typography variant="subtitle2" color="text.secondary">
+                      Seeking: ${(startup.fundingNeeded / 1000000).toFixed(1)}M
+                    </Typography>
+                  </Grid>
+                </Grid>
+                
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
+                  <Box>
+                    <Tooltip title="Save for later">
+                      <IconButton size="small" sx={{ mr: 1 }}>
+                        <FavoriteIcon fontSize="small" />
+                      </IconButton>
+                    </Tooltip>
+                    <Tooltip title="Share">
+                      <IconButton size="small">
+                        <ShareIcon fontSize="small" />
+                      </IconButton>
+                    </Tooltip>
+                  </Box>
+                  <ActionButton
+                    variant="contained"
+                    onClick={() => handleContactClick(startup)}
+                    sx={{
+                      bgcolor: '#008080',
+                      '&:hover': {
+                        bgcolor: '#006666',
+                      },
+                    }}
+                  >
+                    Contact
+                  </ActionButton>
+                </Box>
+              </Box>
+            </StartupCard>
           </Grid>
         ))}
       </Grid>
 
-      {/* Contact Modal */}
-      <StartupContactModal
-        open={!!selectedStartup}
-        onClose={() => setSelectedStartup(null)}
-        startup={selectedStartup}
-      />
+      {selectedStartup && (
+        <StartupContactModal
+          open={Boolean(selectedStartup)}
+          startup={selectedStartup}
+          onClose={() => setSelectedStartup(null)}
+        />
+      )}
     </StyledContainer>
   );
 };

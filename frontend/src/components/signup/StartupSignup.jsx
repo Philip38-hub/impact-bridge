@@ -1,261 +1,258 @@
 import React, { useState } from 'react';
-import {
-  Container,
-  Typography,
-  TextField,
-  Button,
-  Paper,
-  MenuItem,
-  Box,
-  styled,
-} from '@mui/material';
+import { Box, TextField, Button, Typography, Container, MenuItem, Grid, Paper } from '@mui/material';
+import { styled } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-
-const StyledContainer = styled(Container)(({ theme }) => ({
-  marginTop: theme.spacing(8),
-  marginBottom: theme.spacing(8),
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-}));
+import { industries, businessModels, businessStages } from '../../utils/constants';
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(4),
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-  width: '100%',
+  borderRadius: theme.spacing(2),
+  boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)',
 }));
-
-const Form = styled('form')(({ theme }) => ({
-  width: '100%',
-  marginTop: theme.spacing(3),
-}));
-
-const SubmitButton = styled(Button)(({ theme }) => ({
-  margin: theme.spacing(3, 0, 2),
-}));
-
-const Title = styled(Typography)(({ theme }) => ({
-  marginBottom: theme.spacing(3),
-}));
-
-const ErrorMessage = styled(Typography)(({ theme }) => ({
-  color: theme.palette.error.main,
-  marginTop: theme.spacing(2),
-  textAlign: 'center',
-}));
-
-const industries = [
-  'Technology',
-  'Healthcare',
-  'Education',
-  'E-commerce',
-  'Fintech',
-  'Clean Energy',
-  'Agriculture',
-  'Transportation',
-  'Real Estate',
-  'Other',
-];
 
 const StartupSignup = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    email: '',
-    password: '',
-    confirmPassword: '',
-    name: '',
     startupName: '',
     founderName: '',
+    email: '',
+    password: '',
     industry: '',
+    businessModel: '',
+    businessStage: '',
     description: '',
-    fundingNeeded: 0,
-    revenue: 0,
-    valuation: 0
+    impactToSociety: '',
+    location: '',
+    partners: '',
+    referees: '',
   });
   const [error, setError] = useState('');
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: ['fundingNeeded', 'revenue', 'valuation'].includes(name) ? Number(value) : value
-    }));
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
-
-    if (formData.password !== formData.confirmPassword) {
-      setError('Passwords do not match');
-      return;
-    }
-
     try {
-      const { confirmPassword, ...signupData } = formData;
-      
       const response = await axios.post(
         `${import.meta.env.VITE_API_URL}/api/auth/signup/startup`,
-        {
-          ...signupData,
-          type: 'startup'
-        }
+        formData
       );
-      
-      const { token, user } = response.data;
-      localStorage.setItem('token', token);
-      localStorage.setItem('user', JSON.stringify(user));
-      
-      navigate('/dashboard/startup');
+      if (response.data.token) {
+        localStorage.setItem('token', response.data.token);
+        navigate('/dashboard/startup');
+      }
     } catch (err) {
-      console.error('Registration error:', err);
-      setError(err.response?.data?.message || 'An error occurred during registration');
+      setError(err.response?.data?.message || 'An error occurred during signup');
     }
   };
 
   return (
-    <StyledContainer maxWidth="md">
-      <Title variant="h4">
-        Register Your Startup
-      </Title>
+    <Container maxWidth="md">
+      <Box sx={{ mt: 4, mb: 4 }}>
+        <Typography variant="h4" align="center" gutterBottom sx={{ color: '#008080', fontWeight: 700 }}>
+          Register Your Startup
+        </Typography>
+        <Typography variant="subtitle1" align="center" gutterBottom sx={{ mb: 4 }}>
+          Join our community of innovative startups making a difference
+        </Typography>
 
-      <StyledPaper>
-        {error && (
-          <ErrorMessage variant="body2">
-            {error}
-          </ErrorMessage>
-        )}
-
-        <Form onSubmit={handleSubmit}>
-          <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: { md: '1fr 1fr' } }}>
-            <TextField
-              required
-              fullWidth
-              label="Email"
-              name="email"
-              type="email"
-              value={formData.email}
-              onChange={handleChange}
-            />
-            
-            <TextField
-              required
-              fullWidth
-              label="Your Name"
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-            />
-
-            <TextField
-              required
-              fullWidth
-              label="Password"
-              name="password"
-              type="password"
-              value={formData.password}
-              onChange={handleChange}
-            />
-
-            <TextField
-              required
-              fullWidth
-              label="Confirm Password"
-              name="confirmPassword"
-              type="password"
-              value={formData.confirmPassword}
-              onChange={handleChange}
-            />
-
-            <TextField
-              required
-              fullWidth
-              label="Startup Name"
-              name="startupName"
-              value={formData.startupName}
-              onChange={handleChange}
-            />
-
-            <TextField
-              required
-              fullWidth
-              label="Founder Name"
-              name="founderName"
-              value={formData.founderName}
-              onChange={handleChange}
-            />
-
-            <TextField
-              required
-              fullWidth
-              select
-              label="Industry"
-              name="industry"
-              value={formData.industry}
-              onChange={handleChange}
-            >
-              {industries.map((option) => (
-                <MenuItem key={option} value={option}>
-                  {option}
-                </MenuItem>
-              ))}
-            </TextField>
-
-            <TextField
-              required
-              fullWidth
-              label="Funding Needed ($)"
-              name="fundingNeeded"
-              type="number"
-              value={formData.fundingNeeded}
-              onChange={handleChange}
-            />
-
-            <TextField
-              fullWidth
-              label="Current Revenue ($)"
-              name="revenue"
-              type="number"
-              value={formData.revenue}
-              onChange={handleChange}
-            />
-
-            <TextField
-              fullWidth
-              label="Valuation ($)"
-              name="valuation"
-              type="number"
-              value={formData.valuation}
-              onChange={handleChange}
-            />
-          </Box>
-
-          <TextField
-            required
-            fullWidth
-            multiline
-            rows={4}
-            label="Business Description"
-            name="description"
-            value={formData.description}
-            onChange={handleChange}
-            sx={{ mt: 2 }}
-          />
-
-          <SubmitButton
-            type="submit"
-            fullWidth
-            variant="contained"
-            color="primary"
-          >
-            Register
-          </SubmitButton>
-        </Form>
-      </StyledPaper>
-    </StyledContainer>
+        <StyledPaper>
+          <form onSubmit={handleSubmit}>
+            <Grid container spacing={3}>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="Startup Name"
+                  name="startupName"
+                  value={formData.startupName}
+                  onChange={handleChange}
+                  required
+                  variant="outlined"
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="Founder Name"
+                  name="founderName"
+                  value={formData.founderName}
+                  onChange={handleChange}
+                  required
+                  variant="outlined"
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="Email"
+                  name="email"
+                  type="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  required
+                  variant="outlined"
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="Password"
+                  name="password"
+                  type="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  required
+                  variant="outlined"
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  select
+                  label="Industry"
+                  name="industry"
+                  value={formData.industry}
+                  onChange={handleChange}
+                  required
+                  variant="outlined"
+                >
+                  {industries.map((option) => (
+                    <MenuItem key={option} value={option}>
+                      {option}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  select
+                  label="Business Model"
+                  name="businessModel"
+                  value={formData.businessModel}
+                  onChange={handleChange}
+                  required
+                  variant="outlined"
+                >
+                  {businessModels.map((option) => (
+                    <MenuItem key={option} value={option}>
+                      {option}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  select
+                  label="Business Stage"
+                  name="businessStage"
+                  value={formData.businessStage}
+                  onChange={handleChange}
+                  required
+                  variant="outlined"
+                >
+                  {businessStages.map((option) => (
+                    <MenuItem key={option} value={option}>
+                      {option}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="Location"
+                  name="location"
+                  value={formData.location}
+                  onChange={handleChange}
+                  required
+                  variant="outlined"
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  label="Description"
+                  name="description"
+                  value={formData.description}
+                  onChange={handleChange}
+                  required
+                  multiline
+                  rows={3}
+                  variant="outlined"
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  label="Impact to Society"
+                  name="impactToSociety"
+                  value={formData.impactToSociety}
+                  onChange={handleChange}
+                  required
+                  multiline
+                  rows={3}
+                  variant="outlined"
+                  helperText="Describe how your startup contributes to social or environmental impact"
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  label="Partners"
+                  name="partners"
+                  value={formData.partners}
+                  onChange={handleChange}
+                  multiline
+                  rows={2}
+                  variant="outlined"
+                  helperText="List any key partners or collaborators (optional)"
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  label="Referees"
+                  name="referees"
+                  value={formData.referees}
+                  onChange={handleChange}
+                  multiline
+                  rows={2}
+                  variant="outlined"
+                  helperText="Provide contact information for references (optional)"
+                />
+              </Grid>
+              {error && (
+                <Grid item xs={12}>
+                  <Typography color="error" align="center">
+                    {error}
+                  </Typography>
+                </Grid>
+              )}
+              <Grid item xs={12}>
+                <Button
+                  type="submit"
+                  fullWidth
+                  variant="contained"
+                  sx={{
+                    mt: 2,
+                    bgcolor: '#008080',
+                    '&:hover': { bgcolor: '#006666' },
+                    height: 48,
+                  }}
+                >
+                  Sign Up
+                </Button>
+              </Grid>
+            </Grid>
+          </form>
+        </StyledPaper>
+      </Box>
+    </Container>
   );
 };
 

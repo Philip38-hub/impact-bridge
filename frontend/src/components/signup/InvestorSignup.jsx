@@ -1,242 +1,224 @@
 import React, { useState } from 'react';
 import {
-  Container,
-  Typography,
+  Box,
   TextField,
   Button,
-  Paper,
+  Typography,
+  Container,
   MenuItem,
-  Box,
-  styled,
+  Grid,
+  Paper,
+  Autocomplete,
+  Chip,
 } from '@mui/material';
+import { styled } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-
-const StyledContainer = styled(Container)(({ theme }) => ({
-  marginTop: theme.spacing(8),
-  marginBottom: theme.spacing(8),
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-}));
+import { impactAreas } from '../../utils/constants';
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(4),
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-  width: '100%',
+  borderRadius: theme.spacing(2),
+  boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)',
 }));
-
-const Form = styled('form')(({ theme }) => ({
-  width: '100%',
-  marginTop: theme.spacing(3),
-}));
-
-const SubmitButton = styled(Button)(({ theme }) => ({
-  margin: theme.spacing(3, 0, 2),
-}));
-
-const Title = styled(Typography)(({ theme }) => ({
-  marginBottom: theme.spacing(3),
-}));
-
-const ErrorMessage = styled(Typography)(({ theme }) => ({
-  color: theme.palette.error.main,
-  marginTop: theme.spacing(2),
-  textAlign: 'center',
-}));
-
-const investmentPreferenceOptions = [
-  'Seed Stage',
-  'Early Stage',
-  'Growth Stage',
-  'Late Stage',
-  'Pre-IPO',
-];
-
-const interestOptions = [
-  'Technology',
-  'Healthcare',
-  'Education',
-  'E-commerce',
-  'Fintech',
-  'Clean Energy',
-  'Agriculture',
-  'Transportation',
-  'Real Estate',
-  'Other',
-];
 
 const InvestorSignup = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
+    name: '',
     email: '',
     password: '',
-    confirmPassword: '',
-    name: '',
-    portfolioSize: 0,
+    organization: '',
+    position: '',
     investmentPreferences: [],
-    interests: []
+    impactAreas: [],
+    minimumInvestment: '',
+    maximumInvestment: '',
   });
   const [error, setError] = useState('');
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    if (name === 'investmentPreferences' || name === 'interests') {
-      setFormData(prev => ({
-        ...prev,
-        [name]: Array.isArray(value) ? value : [value]
-      }));
-    } else {
-      setFormData(prev => ({
-        ...prev,
-        [name]: name === 'portfolioSize' ? Number(value) : value
-      }));
-    }
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleImpactAreasChange = (event, newValue) => {
+    setFormData({ ...formData, impactAreas: newValue });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
-
-    if (formData.password !== formData.confirmPassword) {
-      setError('Passwords do not match');
-      return;
-    }
-
     try {
-      const { confirmPassword, ...signupData } = formData;
-      
       const response = await axios.post(
         `${import.meta.env.VITE_API_URL}/api/auth/signup/investor`,
-        {
-          ...signupData,
-          type: 'investor'
-        }
+        formData
       );
-      
-      const { token, user } = response.data;
-      localStorage.setItem('token', token);
-      localStorage.setItem('user', JSON.stringify(user));
-      
-      navigate('/dashboard/investor');
+      if (response.data.token) {
+        localStorage.setItem('token', response.data.token);
+        navigate('/dashboard/investor');
+      }
     } catch (err) {
-      console.error('Registration error:', err);
-      setError(err.response?.data?.message || 'An error occurred during registration');
+      setError(err.response?.data?.message || 'An error occurred during signup');
     }
   };
 
   return (
-    <StyledContainer maxWidth="md">
-      <Title variant="h4">
-        Register as an Investor
-      </Title>
+    <Container maxWidth="md">
+      <Box sx={{ mt: 4, mb: 4 }}>
+        <Typography variant="h4" align="center" gutterBottom sx={{ color: '#008080', fontWeight: 700 }}>
+          Register as an Investor
+        </Typography>
+        <Typography variant="subtitle1" align="center" gutterBottom sx={{ mb: 4 }}>
+          Join our community of impact investors making a difference
+        </Typography>
 
-      <StyledPaper>
-        {error && (
-          <ErrorMessage variant="body2">
-            {error}
-          </ErrorMessage>
-        )}
-
-        <Form onSubmit={handleSubmit}>
-          <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: { md: '1fr 1fr' } }}>
-            <TextField
-              required
-              fullWidth
-              label="Email"
-              name="email"
-              type="email"
-              value={formData.email}
-              onChange={handleChange}
-            />
-
-            <TextField
-              required
-              fullWidth
-              label="Your Name"
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-            />
-
-            <TextField
-              required
-              fullWidth
-              label="Password"
-              name="password"
-              type="password"
-              value={formData.password}
-              onChange={handleChange}
-            />
-
-            <TextField
-              required
-              fullWidth
-              label="Confirm Password"
-              name="confirmPassword"
-              type="password"
-              value={formData.confirmPassword}
-              onChange={handleChange}
-            />
-
-            <TextField
-              required
-              fullWidth
-              label="Portfolio Size ($)"
-              name="portfolioSize"
-              type="number"
-              value={formData.portfolioSize}
-              onChange={handleChange}
-            />
-
-            <TextField
-              required
-              fullWidth
-              select
-              SelectProps={{ multiple: true }}
-              label="Investment Preferences"
-              name="investmentPreferences"
-              value={formData.investmentPreferences}
-              onChange={handleChange}
-            >
-              {investmentPreferenceOptions.map((option) => (
-                <MenuItem key={option} value={option}>
-                  {option}
-                </MenuItem>
-              ))}
-            </TextField>
-
-            <TextField
-              required
-              fullWidth
-              select
-              SelectProps={{ multiple: true }}
-              label="Industries of Interest"
-              name="interests"
-              value={formData.interests}
-              onChange={handleChange}
-            >
-              {interestOptions.map((option) => (
-                <MenuItem key={option} value={option}>
-                  {option}
-                </MenuItem>
-              ))}
-            </TextField>
-          </Box>
-
-          <SubmitButton
-            type="submit"
-            fullWidth
-            variant="contained"
-            color="primary"
-          >
-            Register
-          </SubmitButton>
-        </Form>
-      </StyledPaper>
-    </StyledContainer>
+        <StyledPaper>
+          <form onSubmit={handleSubmit}>
+            <Grid container spacing={3}>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="Full Name"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  required
+                  variant="outlined"
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="Email"
+                  name="email"
+                  type="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  required
+                  variant="outlined"
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="Password"
+                  name="password"
+                  type="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  required
+                  variant="outlined"
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="Organization"
+                  name="organization"
+                  value={formData.organization}
+                  onChange={handleChange}
+                  required
+                  variant="outlined"
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="Position"
+                  name="position"
+                  value={formData.position}
+                  onChange={handleChange}
+                  required
+                  variant="outlined"
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="Minimum Investment ($)"
+                  name="minimumInvestment"
+                  type="number"
+                  value={formData.minimumInvestment}
+                  onChange={handleChange}
+                  required
+                  variant="outlined"
+                  InputProps={{
+                    startAdornment: '$',
+                  }}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="Maximum Investment ($)"
+                  name="maximumInvestment"
+                  type="number"
+                  value={formData.maximumInvestment}
+                  onChange={handleChange}
+                  required
+                  variant="outlined"
+                  InputProps={{
+                    startAdornment: '$',
+                  }}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <Autocomplete
+                  multiple
+                  id="impact-areas"
+                  options={impactAreas}
+                  value={formData.impactAreas}
+                  onChange={handleImpactAreasChange}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      variant="outlined"
+                      label="Impact Areas"
+                      required
+                      helperText="Select the areas where you want to make an impact"
+                    />
+                  )}
+                  renderTags={(value, getTagProps) =>
+                    value.map((option, index) => (
+                      <Chip
+                        variant="outlined"
+                        label={option}
+                        {...getTagProps({ index })}
+                        sx={{ 
+                          borderColor: '#008080',
+                          color: '#008080'
+                        }}
+                      />
+                    ))
+                  }
+                />
+              </Grid>
+              {error && (
+                <Grid item xs={12}>
+                  <Typography color="error" align="center">
+                    {error}
+                  </Typography>
+                </Grid>
+              )}
+              <Grid item xs={12}>
+                <Button
+                  type="submit"
+                  fullWidth
+                  variant="contained"
+                  sx={{
+                    mt: 2,
+                    bgcolor: '#008080',
+                    '&:hover': { bgcolor: '#006666' },
+                    height: 48,
+                  }}
+                >
+                  Sign Up
+                </Button>
+              </Grid>
+            </Grid>
+          </form>
+        </StyledPaper>
+      </Box>
+    </Container>
   );
 };
 
