@@ -32,26 +32,17 @@ const mongoOptions = {
 
 // Connect to MongoDB
 mongoose.connect(process.env.MONGODB_URI, mongoOptions)
-  .then(() => console.log('Connected to MongoDB'))
+  .then(() => {})
   .catch(err => {
-    console.error('MongoDB connection error:', err);
     process.exit(1); // Exit if MongoDB connection fails
   });
 
 // Handle MongoDB connection events
-mongoose.connection.on('connected', () => {
-  console.log('Mongoose connected to MongoDB');
-});
+mongoose.connection.on('connected', () => {});
 
-mongoose.connection.on('error', (err) => {
-  console.error('Mongoose connection error:', err);
-});
+mongoose.connection.on('error', (err) => {});
 
-mongoose.connection.on('disconnected', () => {
-  console.log('Mongoose disconnected from MongoDB');
-});
+mongoose.connection.on('disconnected', () => {});
 
 const PORT = process.env.PORT || 3001;
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+app.listen(PORT, () => {});

@@ -8,7 +8,6 @@ router.get('/', async (req, res) => {
     const investors = await User.find({ type: 'investor' }).select('-password');
     res.json(investors);
   } catch (error) {
-    console.error('Error fetching investors:', error);
     res.status(500).json({ message: 'Error fetching investors' });
   }
 });
@@ -22,7 +21,6 @@ router.get('/:id', async (req, res) => {
     }
     res.json(investor);
   } catch (error) {
-    console.error('Error fetching investor:', error);
     res.status(500).json({ message: 'Error fetching investor' });
   }
 });
