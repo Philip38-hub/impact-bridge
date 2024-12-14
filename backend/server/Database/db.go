@@ -60,10 +60,9 @@ type StartUp struct {
 }
 
 type Investor struct {
-	Name string `json:"name" gorm:"type:varchar(255);notnull"`
-	Sector        string `json:"sector" gorm:"type:varchar(100)"`
-	Location      string `json:"location" gorm:"type:varchar(255)"`
-	BusinessStage string `json:"business_stage"gorm:"type:varchar(50)"`
+	ID          int    `json:"id"`
+    Name        string `json:"name"`
+    Description string `json:"description"`
 }
 
 func CheckConnection() *sql.DB{
@@ -126,4 +125,8 @@ func GetInvestors(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, investors)
+}
+
+func SignupInvestor(c *gin.Context) {
+
 }
