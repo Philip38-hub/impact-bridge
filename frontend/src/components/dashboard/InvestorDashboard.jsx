@@ -10,15 +10,15 @@ import {
   CircularProgress,
   Chip,
   Avatar,
-  IconButton,
-  Tooltip
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import BusinessIcon from '@mui/icons-material/Business';
 import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
 import CategoryIcon from '@mui/icons-material/Category';
 import { useAuth } from '../../contexts/AuthContext';
+import StartupContactModal from '../contact/StartupContactModal';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const StyledContainer = styled(Container)(({ theme }) => ({
   flex: 1,
@@ -55,9 +55,11 @@ const StatCard = styled(Card)(({ theme }) => ({
 
 const InvestorDashboard = () => {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [startups, setStartups] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [selectedStartup, setSelectedStartup] = useState(null);
   const [stats, setStats] = useState({
     totalStartups: 0,
     matchingStartups: 0,
@@ -100,6 +102,10 @@ const InvestorDashboard = () => {
 
     fetchStartups();
   }, [user.interests]);
+
+  const handleContactClick = (startup) => {
+    setSelectedStartup(startup);
+  };
 
   if (loading) {
     return (
@@ -209,9 +215,9 @@ const InvestorDashboard = () => {
                     variant="contained"
                     color="primary"
                     size="small"
-                    onClick={() => {/* TODO: Implement contact functionality */}}
+                    onClick={() => handleContactClick(startup)}
                   >
-                    Contact
+                    Invest Now
                   </Button>
                 </Box>
               </CardContent>
@@ -219,6 +225,13 @@ const InvestorDashboard = () => {
           </Grid>
         ))}
       </Grid>
+
+      {/* Contact Modal */}
+      <StartupContactModal
+        open={!!selectedStartup}
+        onClose={() => setSelectedStartup(null)}
+        startup={selectedStartup}
+      />
     </StyledContainer>
   );
 };

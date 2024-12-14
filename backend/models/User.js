@@ -18,57 +18,98 @@ const userSchema = new mongoose.Schema({
     type: String,
     sparse: true,
   },
-  userType: {
+  name: {
+    type: String,
+    required: true
+  },
+  type: {
     type: String,
     enum: ['startup', 'investor'],
     required: true,
   },
+  // Startup specific fields
   startupName: {
     type: String,
     required: function() {
-      return this.userType === 'startup';
+      return this.type === 'startup';
     }
   },
   founderName: {
     type: String,
     required: function() {
-      return this.userType === 'startup';
-    }
-  },
-  name: {
-    type: String,
-    required: function() {
-      return this.userType === 'investor';
+      return this.type === 'startup';
     }
   },
   industry: {
     type: String,
     required: function() {
-      return this.userType === 'startup';
+      return this.type === 'startup';
     }
   },
   description: {
     type: String,
     required: function() {
-      return this.userType === 'startup';
+      return this.type === 'startup';
     }
   },
   fundingNeeded: {
-    type: String,
+    type: Number,
     required: function() {
-      return this.userType === 'startup';
+      return this.type === 'startup';
     }
   },
+  revenue: {
+    type: Number,
+    default: 0
+  },
+  valuation: {
+    type: Number,
+    default: 0
+  },
+  // Contact fields
+  phone: {
+    type: String
+  },
+  linkedin: {
+    type: String
+  },
+  facebook: {
+    type: String
+  },
+  whatsapp: {
+    type: String
+  },
+  zoomId: {
+    type: String
+  },
+  // Investor specific fields
+  investmentPreferences: [{
+    type: String,
+    default: []
+  }],
+  portfolioSize: {
+    type: Number,
+    default: 0
+  },
+  interests: [{
+    type: String,
+    default: []
+  }],
   createdAt: {
     type: Date,
-    default: Date.now,
-  },
+    default: Date.now
+  }
+}, {
+  timestamps: true,
+  toJSON: { virtuals: true },
+  toObject: { virtuals: true }
 });
 
 // Hash password before saving
 userSchema.pre('save', async function(next) {
   if (this.isModified('password') && this.password) {
-    this.password = await bcrypt.hash(this.password, 10);
+    const salt = await bcrypt.genSalt(10);
+    this.password = await bcrypt.hash(this.password, salt);
   }
   next();
 });
