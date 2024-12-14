@@ -1,5 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { AppBar, Toolbar, Typography, Button, Box, IconButton, Menu, MenuItem } from '@mui/material';
+import { 
+  AppBar, 
+  Toolbar, 
+  Typography, 
+  Button, 
+  Box, 
+  IconButton, 
+  Menu, 
+  MenuItem,
+  Tooltip 
+} from '@mui/material';
 import { styled } from '@mui/material/styles';
 import LoginIcon from '@mui/icons-material/Login';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
@@ -7,9 +17,10 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import SettingsIcon from '@mui/icons-material/Settings';
 import LogoutIcon from '@mui/icons-material/Logout';
 import MessageIcon from '@mui/icons-material/Message';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
 import LoginModal from './LoginModal';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import { useAuth } from '../contexts/AuthContext';
 
 const StyledAppBar = styled(AppBar)`
   background-color: white;
@@ -36,6 +47,23 @@ const Logo = styled(Typography)`
   }
 `;
 
+const WelcomeText = styled(Typography)`
+  color: #333;
+  margin-right: 16px;
+  font-family: 'Poppins, sans-serif';
+`;
+
+const IconButtonStyled = styled(IconButton)`
+  color: #008080;
+  margin: 0 4px;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    transform: scale(1.1);
+    background-color: rgba(0, 128, 128, 0.1);
+  }
+`;
+
 const AuthButton = styled(Button)`
   font-family: 'Poppins, sans-serif';
   text-transform: none;
@@ -47,190 +75,169 @@ const AuthButton = styled(Button)`
   align-items: center;
   gap: 8px;
 
-  .MuiSvgIcon-root {
-    font-size: 20px;
-    transition: transform 0.2s ease;
-  }
-
-  &:hover .MuiSvgIcon-root {
-    transform: translateX(2px);
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   }
 
   &:active {
-    transform: scale(0.98);
+    transform: translateY(0) scale(0.98);
   }
 
   .button-text {
+    display: inline-block;
     @media (max-width: 600px) {
       display: none;
     }
   }
-
-  @media (max-width: 600px) {
-    padding: 8px;
-    min-width: unset;
-    margin-left: 8px;
-  }
 `;
-
-const IconButtonStyled = styled(IconButton)(({ theme }) => ({
-  color: '#008080',
-  marginLeft: theme.spacing(1),
-  '&:hover': {
-    backgroundColor: 'rgba(0, 128, 128, 0.04)',
-  },
-}));
-
-const WelcomeText = styled(Typography)(({ theme }) => ({
-  fontFamily: 'Poppins, sans-serif',
-  color: '#666',
-  marginRight: theme.spacing(2),
-  '@media (max-width: 600px)': {
-    display: 'none',
-  },
-}));
 
 const Header = () => {
   const [loginOpen, setLoginOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
-  const [userData, setUserData] = useState(null);
   const navigate = useNavigate();
-  
-  const isLoggedIn = Boolean(localStorage.getItem('token'));
-  const userType = localStorage.getItem('userType');
+  const { user, logout } = useAuth();
 
   useEffect(() => {
-    const fetchUserData = async () => {
-      const token = localStorage.getItem('token');
-      if (token) {
-        try {
-          const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/user/profile`, {
-            headers: { Authorization: `Bearer ${token}` }
-          });
-          setUserData(response.data);
-        } catch (error) {
-          console.error('Error fetching user data:', error);
-        }
-      }
-    };
-
-    fetchUserData();
-  }, []);
-
-  const handleMenu = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
+    console.log('Current user data:', user);
+  }, [user]);
+  
+  const handleLoginOpen = () => setLoginOpen(true);
+  const handleLoginClose = () => setLoginOpen(false);
+  const handleMenuOpen = (event) => setAnchorEl(event.currentTarget);
+  const handleMenuClose = () => setAnchorEl(null);
 
   const handleLogout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('userType');
+    logout();
+    handleMenuClose();
     navigate('/');
-    handleClose();
   };
 
-  const handleSettings = () => {
-    navigate('/settings');
-    handleClose();
+  const handleProfileClick = () => {
+    handleMenuClose();
+    navigate(`/dashboard/${user.type}`);
   };
 
-  const handleProfile = () => {
-    navigate('/profile');
-    handleClose();
+  const handleAddStartup = () => {
+    navigate('/add-startup');
   };
 
-  const handleMessages = () => {
-    navigate('/messages');
-    handleClose();
-  };
-
-  const handleLogoClick = () => {
-    if (isLoggedIn) {
-      navigate(userType === 'startup' ? '/startup-dashboard' : '/investor-dashboard');
-    } else {
-      navigate('/');
-    }
+  const getDisplayName = () => {
+    if (!user) return 'User';
+    if (user.startupName) return user.startupName;
+    if (user.founderName) return user.founderName;
+    if (user.name) return user.name;
+    return 'User';
   };
 
   return (
     <StyledAppBar position="sticky">
       <Toolbar>
-        <Logo onClick={handleLogoClick}>
+        <Logo variant="h6" onClick={() => navigate('/')}>
           Impact Bridge
         </Logo>
 
-        {isLoggedIn ? (
-          <>
-            {userType === 'startup' && (
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          {user ? (
+            <>
               <WelcomeText variant="body1">
-                Welcome, {userData?.startupName || 'Startup'}!
+                Welcome, {getDisplayName()}
               </WelcomeText>
-            )}
-            
-            {userType === 'startup' && (
-              <IconButtonStyled onClick={handleMessages}>
-                <MessageIcon />
-              </IconButtonStyled>
-            )}
-
-            <IconButtonStyled onClick={handleMenu}>
-              <AccountCircleIcon />
-            </IconButtonStyled>
-
-            <Menu
-              anchorEl={anchorEl}
-              open={Boolean(anchorEl)}
-              onClose={handleClose}
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'right',
-              }}
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-            >
-              <MenuItem onClick={handleProfile}>
-                <AccountCircleIcon sx={{ mr: 1 }} /> Profile
-              </MenuItem>
-              <MenuItem onClick={handleSettings}>
-                <SettingsIcon sx={{ mr: 1 }} /> Settings
-              </MenuItem>
-              <MenuItem onClick={handleLogout}>
-                <LogoutIcon sx={{ mr: 1 }} /> Logout
-              </MenuItem>
-            </Menu>
-          </>
-        ) : (
-          <>
-            <AuthButton
-              variant="outlined"
-              color="primary"
-              onClick={() => setLoginOpen(true)}
-            >
-              <LoginIcon />
-              <span className="button-text">Sign In</span>
-            </AuthButton>
-            <AuthButton
-              variant="contained"
-              color="primary"
-              onClick={() => navigate('/signup')}
-            >
-              <PersonAddIcon />
-              <span className="button-text">Sign Up</span>
-            </AuthButton>
-          </>
-        )}
-
-        <LoginModal
-          open={loginOpen}
-          onClose={() => setLoginOpen(false)}
-          onLogin={() => setLoginOpen(false)}
-        />
+              {user.type === 'startup' && (
+                <Tooltip title="Add New Business" arrow placement="bottom">
+                  <IconButtonStyled 
+                    onClick={handleAddStartup}
+                    sx={{ 
+                      color: '#008080',
+                      '&:hover': { 
+                        backgroundColor: 'rgba(0, 128, 128, 0.1)',
+                        transform: 'scale(1.1)'
+                      }
+                    }}
+                  >
+                    <AddCircleIcon />
+                  </IconButtonStyled>
+                </Tooltip>
+              )}
+              <Tooltip title="Messages" arrow placement="bottom">
+                <IconButtonStyled>
+                  <MessageIcon />
+                </IconButtonStyled>
+              </Tooltip>
+              <Tooltip title="Settings" arrow placement="bottom">
+                <IconButtonStyled>
+                  <SettingsIcon />
+                </IconButtonStyled>
+              </Tooltip>
+              <Tooltip title="Account Menu" arrow placement="bottom">
+                <IconButtonStyled onClick={handleMenuOpen}>
+                  <AccountCircleIcon />
+                </IconButtonStyled>
+              </Tooltip>
+              <Menu
+                anchorEl={anchorEl}
+                open={Boolean(anchorEl)}
+                onClose={handleMenuClose}
+                PaperProps={{
+                  elevation: 3,
+                  sx: {
+                    mt: 1.5,
+                    '& .MuiMenuItem-root': {
+                      padding: '10px 20px',
+                      transition: 'background-color 0.2s ease',
+                      '&:hover': {
+                        backgroundColor: 'rgba(0, 128, 128, 0.1)',
+                      },
+                    },
+                  },
+                }}
+              >
+                <MenuItem onClick={handleProfileClick}>
+                  <AccountCircleIcon sx={{ mr: 1, color: '#008080' }} /> Profile
+                </MenuItem>
+                <MenuItem onClick={handleMenuClose}>
+                  <SettingsIcon sx={{ mr: 1, color: '#008080' }} /> Settings
+                </MenuItem>
+                {user.type === 'startup' && (
+                  <MenuItem onClick={handleMenuClose}>
+                    <MessageIcon sx={{ mr: 1, color: '#008080' }} /> Messages
+                  </MenuItem>
+                )}
+                <MenuItem onClick={handleLogout}>
+                  <LogoutIcon sx={{ mr: 1, color: '#008080' }} /> Logout
+                </MenuItem>
+              </Menu>
+            </>
+          ) : (
+            <>
+              <AuthButton 
+                variant="outlined" 
+                color="primary" 
+                onClick={handleLoginOpen}
+                sx={{ borderColor: '#008080', color: '#008080' }}
+              >
+                <LoginIcon />
+                <span className="button-text">Login</span>
+              </AuthButton>
+              <AuthButton 
+                variant="contained" 
+                onClick={() => navigate('/signup')}
+                sx={{ 
+                  backgroundColor: '#008080',
+                  '&:hover': { backgroundColor: '#006666' }
+                }}
+              >
+                <PersonAddIcon />
+                <span className="button-text">Sign Up</span>
+              </AuthButton>
+            </>
+          )}
+        </Box>
       </Toolbar>
+      <LoginModal 
+        open={loginOpen} 
+        onClose={handleLoginClose}
+      />
     </StyledAppBar>
   );
 };

@@ -17,8 +17,8 @@ import FacebookIcon from '@mui/icons-material/Facebook';
 import EmailIcon from '@mui/icons-material/Email';
 import LockIcon from '@mui/icons-material/Lock';
 import LoginIcon from '@mui/icons-material/Login';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
 
 const ModalContainer = styled(Box)(({ theme }) => ({
   position: 'absolute',
@@ -125,42 +125,43 @@ const SocialButton = styled(Button)(({ theme }) => ({
   }
 }));
 
-const LoginModal = ({ open, onClose, onLogin }) => {
+const LoginModal = ({ open, onClose }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
-    
-    try {
-      const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/auth/login`, {
-        email,
-        password,
-      });
-      
-      const { token, userType } = response.data;
-      localStorage.setItem('token', token);
-      localStorage.setItem('userType', userType);
-      onLogin(userType);
-      onClose();
-      navigate('/', { replace: true });
-    } catch (err) {
-      setError(err.response?.data?.message || 'An error occurred during login');
-    }
-  };
+    setLoading(true);
 
-  const handleSocialLogin = (provider) => {
-    console.log(`${provider} login clicked`);
+    try {
+      const user = await login({ email, password });
+      console.log('Login successful:', user);
+      
+      if (user && user.type) {
+        onClose();
+        navigate(`/dashboard/${user.type}`);
+      } else {
+        throw new Error('Invalid login response');
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+      setError(error.message || 'Login failed');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <Modal
       open={open}
       onClose={onClose}
-      aria-labelledby="login-modal-title"
+      aria-labelledby="login-modal"
+      aria-describedby="login-form"
     >
       <ModalContainer>
         <CloseButton onClick={onClose}>
@@ -168,117 +169,95 @@ const LoginModal = ({ open, onClose, onLogin }) => {
         </CloseButton>
 
         <Typography
-          id="login-modal-title"
           variant="h5"
-          component="h2"
           sx={{
             mb: 3,
-            fontFamily: 'Montserrat',
+            fontFamily: 'Poppins',
             fontWeight: 600,
             color: '#008080',
-            transition: 'color 0.2s ease',
-            '&:hover': {
-              color: '#006666'
-            }
+            textAlign: 'center'
           }}
         >
-          Sign In
+          Welcome Back
         </Typography>
 
         {error && (
-          <Alert 
-            severity="error" 
-            sx={{ 
-              mb: 2,
-              transition: 'all 0.2s ease',
-              '&:hover': {
-                transform: 'translateY(-1px)',
-                boxShadow: '0 2px 4px rgba(0, 0, 0, 0.05)'
-              }
-            }}
-          >
+          <Alert severity="error" sx={{ mb: 2 }}>
             {error}
           </Alert>
         )}
 
         <Form onSubmit={handleSubmit}>
           <StyledTextField
+            required
+            fullWidth
             label="Email"
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            required
-            fullWidth
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
                   <EmailIcon sx={{ color: '#008080' }} />
                 </InputAdornment>
-              )
-            }}
-            sx={{
-              '& label': { fontFamily: 'Roboto' },
-              '& input': { fontFamily: 'Open Sans' }
+              ),
             }}
           />
+
           <StyledTextField
+            required
+            fullWidth
             label="Password"
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            required
-            fullWidth
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
                   <LockIcon sx={{ color: '#008080' }} />
                 </InputAdornment>
-              )
-            }}
-            sx={{
-              '& label': { fontFamily: 'Roboto' },
-              '& input': { fontFamily: 'Open Sans' }
+              ),
             }}
           />
+
           <SubmitButton
             type="submit"
             variant="contained"
-            fullWidth
-            endIcon={<LoginIcon />}
+            disabled={loading}
             sx={{
               backgroundColor: '#008080',
-              fontFamily: 'Poppins',
-              '&:hover': {
-                backgroundColor: '#006666'
-              }
+              '&:hover': { backgroundColor: '#006666' }
             }}
           >
-            Sign In
+            {loading ? 'Logging in...' : (
+              <>
+                <LoginIcon sx={{ mr: 1 }} />
+                Login
+              </>
+            )}
           </SubmitButton>
         </Form>
 
         <OrDivider>
-          <Divider />
-          <Typography className="divider-text">
-            OR
-          </Typography>
-          <Divider />
+          <Divider className="MuiDivider-root" />
+          <Typography className="divider-text">or continue with</Typography>
+          <Divider className="MuiDivider-root" />
         </OrDivider>
 
-        <Box sx={{ mt: 2 }}>
+        <Box sx={{ display: 'flex', gap: 2 }}>
           <SocialButton
-            onClick={() => handleSocialLogin('google')}
+            variant="outlined"
             startIcon={<GoogleIcon />}
-            sx={{ color: '#DB4437' }}
+            sx={{ borderColor: '#008080', color: '#008080' }}
           >
-            Continue with Google
+            Google
           </SocialButton>
           <SocialButton
-            onClick={() => handleSocialLogin('facebook')}
+            variant="outlined"
             startIcon={<FacebookIcon />}
-            sx={{ color: '#4267B2' }}
+            sx={{ borderColor: '#008080', color: '#008080' }}
           >
-            Continue with Facebook
+            Facebook
           </SocialButton>
         </Box>
       </ModalContainer>
