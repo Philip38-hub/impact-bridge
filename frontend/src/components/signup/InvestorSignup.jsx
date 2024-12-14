@@ -28,6 +28,7 @@ const InvestorSignup = () => {
     name: '',
     email: '',
     password: '',
+    confirmPassword: '',
     organization: '',
     position: '',
     investmentPreferences: [],
@@ -37,20 +38,25 @@ const InvestorSignup = () => {
   });
   const [error, setError] = useState('');
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
-  const handleImpactAreasChange = (event, newValue) => {
-    setFormData({ ...formData, impactAreas: newValue });
+  const handleChange = (field, value) => {
+    setFormData({ ...formData, [field]: value });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError('');
+
+    // Validate password match
+    if (formData.password !== formData.confirmPassword) {
+      setError('Passwords do not match');
+      return;
+    }
+
     try {
+      const { confirmPassword, ...dataToSubmit } = formData; // Remove confirmPassword from submission
       const response = await axios.post(
         `${import.meta.env.VITE_API_URL}/api/auth/signup/investor`,
-        formData
+        dataToSubmit
       );
       if (response.data.token) {
         localStorage.setItem('token', response.data.token);
@@ -80,7 +86,7 @@ const InvestorSignup = () => {
                   label="Full Name"
                   name="name"
                   value={formData.name}
-                  onChange={handleChange}
+                  onChange={(e) => handleChange('name', e.target.value)}
                   required
                   variant="outlined"
                 />
@@ -92,7 +98,7 @@ const InvestorSignup = () => {
                   name="email"
                   type="email"
                   value={formData.email}
-                  onChange={handleChange}
+                  onChange={(e) => handleChange('email', e.target.value)}
                   required
                   variant="outlined"
                 />
@@ -104,7 +110,19 @@ const InvestorSignup = () => {
                   name="password"
                   type="password"
                   value={formData.password}
-                  onChange={handleChange}
+                  onChange={(e) => handleChange('password', e.target.value)}
+                  required
+                  variant="outlined"
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="Confirm Password"
+                  name="confirmPassword"
+                  type="password"
+                  value={formData.confirmPassword}
+                  onChange={(e) => handleChange('confirmPassword', e.target.value)}
                   required
                   variant="outlined"
                 />
@@ -115,7 +133,7 @@ const InvestorSignup = () => {
                   label="Organization"
                   name="organization"
                   value={formData.organization}
-                  onChange={handleChange}
+                  onChange={(e) => handleChange('organization', e.target.value)}
                   required
                   variant="outlined"
                 />
@@ -126,7 +144,7 @@ const InvestorSignup = () => {
                   label="Position"
                   name="position"
                   value={formData.position}
-                  onChange={handleChange}
+                  onChange={(e) => handleChange('position', e.target.value)}
                   required
                   variant="outlined"
                 />
@@ -138,7 +156,7 @@ const InvestorSignup = () => {
                   name="minimumInvestment"
                   type="number"
                   value={formData.minimumInvestment}
-                  onChange={handleChange}
+                  onChange={(e) => handleChange('minimumInvestment', e.target.value)}
                   required
                   variant="outlined"
                   InputProps={{
@@ -153,7 +171,7 @@ const InvestorSignup = () => {
                   name="maximumInvestment"
                   type="number"
                   value={formData.maximumInvestment}
-                  onChange={handleChange}
+                  onChange={(e) => handleChange('maximumInvestment', e.target.value)}
                   required
                   variant="outlined"
                   InputProps={{
@@ -167,29 +185,42 @@ const InvestorSignup = () => {
                   id="impact-areas"
                   options={impactAreas}
                   value={formData.impactAreas}
-                  onChange={handleImpactAreasChange}
+                  onChange={(_, newValue) => handleChange('impactAreas', newValue)}
                   renderInput={(params) => (
                     <TextField
                       {...params}
                       variant="outlined"
                       label="Impact Areas"
-                      required
-                      helperText="Select the areas where you want to make an impact"
+                      placeholder="Select impact areas"
+                      error={!!error && error.includes('impactAreas')}
+                      helperText={error && error.includes('impactAreas') ? error : ''}
                     />
                   )}
                   renderTags={(value, getTagProps) =>
-                    value.map((option, index) => (
-                      <Chip
-                        variant="outlined"
-                        label={option}
-                        {...getTagProps({ index })}
-                        sx={{ 
-                          borderColor: '#008080',
-                          color: '#008080'
-                        }}
-                      />
-                    ))
+                    value.map((option, index) => {
+                      const tagProps = getTagProps({ index });
+                      delete tagProps.key; // Remove key from spread props
+                      return (
+                        <Chip
+                          key={index}
+                          label={option}
+                          {...tagProps}
+                          sx={{
+                            backgroundColor: '#e0f2f1',
+                            color: '#006666',
+                            '& .MuiChip-deleteIcon': {
+                              color: '#006666',
+                              '&:hover': {
+                                color: '#004c4c',
+                              },
+                            },
+                          }}
+                        />
+                      );
+                    })
                   }
+                  isOptionEqualToValue={(option, value) => option === value}
+                  filterSelectedOptions
                 />
               </Grid>
               {error && (

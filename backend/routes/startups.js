@@ -40,6 +40,7 @@ router.get('/', auth, async (req, res) => {
 
     res.json(startups);
   } catch (error) {
+    console.error('Error fetching startups:', error);
     res.status(500).json({ message: 'Error fetching startups' });
   }
 });
@@ -66,6 +67,7 @@ router.get('/:id', auth, async (req, res) => {
 
     res.json(startup);
   } catch (error) {
+    console.error('Error fetching startup:', error);
     res.status(500).json({ message: 'Error fetching startup' });
   }
 });

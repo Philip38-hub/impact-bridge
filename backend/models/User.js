@@ -46,11 +46,43 @@ const userSchema = new mongoose.Schema({
       return this.type === 'startup';
     }
   },
+  businessModel: {
+    type: String,
+    required: function() {
+      return this.type === 'startup';
+    }
+  },
+  businessStage: {
+    type: String,
+    required: function() {
+      return this.type === 'startup';
+    }
+  },
+  location: {
+    type: String,
+    required: function() {
+      return this.type === 'startup';
+    }
+  },
   description: {
     type: String,
     required: function() {
       return this.type === 'startup';
     }
+  },
+  impactToSociety: {
+    type: String,
+    required: function() {
+      return this.type === 'startup';
+    }
+  },
+  partners: {
+    type: String,
+    required: false
+  },
+  referees: {
+    type: String,
+    required: false
   },
   fundingNeeded: {
     type: Number,
@@ -83,6 +115,30 @@ const userSchema = new mongoose.Schema({
     type: String
   },
   // Investor specific fields
+  organization: {
+    type: String,
+    required: function() {
+      return this.type === 'investor';
+    }
+  },
+  position: {
+    type: String,
+    required: function() {
+      return this.type === 'investor';
+    }
+  },
+  minInvestment: {
+    type: Number,
+    required: function() {
+      return this.type === 'investor';
+    }
+  },
+  maxInvestment: {
+    type: Number,
+    required: function() {
+      return this.type === 'investor';
+    }
+  },
   investmentPreferences: [{
     type: String,
     default: []
@@ -99,10 +155,6 @@ const userSchema = new mongoose.Schema({
     type: Date,
     default: Date.now
   }
-}, {
-  timestamps: true,
-  toJSON: { virtuals: true },
-  toObject: { virtuals: true }
 });
 
 // Hash password before saving

@@ -18,6 +18,7 @@ const StartupSignup = () => {
     founderName: '',
     email: '',
     password: '',
+    confirmPassword: '',
     industry: '',
     businessModel: '',
     businessStage: '',
@@ -29,16 +30,25 @@ const StartupSignup = () => {
   });
   const [error, setError] = useState('');
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  const handleChange = (field, value) => {
+    setFormData({ ...formData, [field]: value });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError('');
+
+    // Validate password match
+    if (formData.password !== formData.confirmPassword) {
+      setError('Passwords do not match');
+      return;
+    }
+
     try {
+      const { confirmPassword, ...dataToSubmit } = formData; // Remove confirmPassword from submission
       const response = await axios.post(
         `${import.meta.env.VITE_API_URL}/api/auth/signup/startup`,
-        formData
+        dataToSubmit
       );
       if (response.data.token) {
         localStorage.setItem('token', response.data.token);
@@ -68,7 +78,7 @@ const StartupSignup = () => {
                   label="Startup Name"
                   name="startupName"
                   value={formData.startupName}
-                  onChange={handleChange}
+                  onChange={(e) => handleChange('startupName', e.target.value)}
                   required
                   variant="outlined"
                 />
@@ -79,7 +89,7 @@ const StartupSignup = () => {
                   label="Founder Name"
                   name="founderName"
                   value={formData.founderName}
-                  onChange={handleChange}
+                  onChange={(e) => handleChange('founderName', e.target.value)}
                   required
                   variant="outlined"
                 />
@@ -91,21 +101,33 @@ const StartupSignup = () => {
                   name="email"
                   type="email"
                   value={formData.email}
-                  onChange={handleChange}
+                  onChange={(e) => handleChange('email', e.target.value)}
                   required
                   variant="outlined"
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
                 <TextField
-                  fullWidth
-                  label="Password"
-                  name="password"
-                  type="password"
-                  value={formData.password}
-                  onChange={handleChange}
                   required
-                  variant="outlined"
+                  fullWidth
+                  type="password"
+                  label="Password"
+                  value={formData.password}
+                  onChange={(e) => handleChange('password', e.target.value)}
+                  error={!!error && error.includes('password')}
+                  helperText={error && error.includes('password') ? error : ''}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  required
+                  fullWidth
+                  type="password"
+                  label="Confirm Password"
+                  value={formData.confirmPassword}
+                  onChange={(e) => handleChange('confirmPassword', e.target.value)}
+                  error={!!error && error.includes('password')}
+                  helperText={error && error.includes('password') ? error : ''}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -115,7 +137,7 @@ const StartupSignup = () => {
                   label="Industry"
                   name="industry"
                   value={formData.industry}
-                  onChange={handleChange}
+                  onChange={(e) => handleChange('industry', e.target.value)}
                   required
                   variant="outlined"
                 >
@@ -133,7 +155,7 @@ const StartupSignup = () => {
                   label="Business Model"
                   name="businessModel"
                   value={formData.businessModel}
-                  onChange={handleChange}
+                  onChange={(e) => handleChange('businessModel', e.target.value)}
                   required
                   variant="outlined"
                 >
@@ -151,7 +173,7 @@ const StartupSignup = () => {
                   label="Business Stage"
                   name="businessStage"
                   value={formData.businessStage}
-                  onChange={handleChange}
+                  onChange={(e) => handleChange('businessStage', e.target.value)}
                   required
                   variant="outlined"
                 >
@@ -168,7 +190,7 @@ const StartupSignup = () => {
                   label="Location"
                   name="location"
                   value={formData.location}
-                  onChange={handleChange}
+                  onChange={(e) => handleChange('location', e.target.value)}
                   required
                   variant="outlined"
                 />
@@ -179,7 +201,7 @@ const StartupSignup = () => {
                   label="Description"
                   name="description"
                   value={formData.description}
-                  onChange={handleChange}
+                  onChange={(e) => handleChange('description', e.target.value)}
                   required
                   multiline
                   rows={3}
@@ -192,7 +214,7 @@ const StartupSignup = () => {
                   label="Impact to Society"
                   name="impactToSociety"
                   value={formData.impactToSociety}
-                  onChange={handleChange}
+                  onChange={(e) => handleChange('impactToSociety', e.target.value)}
                   required
                   multiline
                   rows={3}
@@ -206,7 +228,7 @@ const StartupSignup = () => {
                   label="Partners"
                   name="partners"
                   value={formData.partners}
-                  onChange={handleChange}
+                  onChange={(e) => handleChange('partners', e.target.value)}
                   multiline
                   rows={2}
                   variant="outlined"
@@ -219,7 +241,7 @@ const StartupSignup = () => {
                   label="Referees"
                   name="referees"
                   value={formData.referees}
-                  onChange={handleChange}
+                  onChange={(e) => handleChange('referees', e.target.value)}
                   multiline
                   rows={2}
                   variant="outlined"
