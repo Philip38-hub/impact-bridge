@@ -55,7 +55,7 @@ const InvestorSignup = () => {
     try {
       const { confirmPassword, ...dataToSubmit } = formData; // Remove confirmPassword from submission
       const response = await axios.post(
-        `${import.meta.env.VITE_API_URL}/api/auth/signup/investor`,
+        `http://localhost:8080/signup/investor`,
         dataToSubmit
       );
       if (response.data.token) {

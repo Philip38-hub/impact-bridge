@@ -47,11 +47,11 @@ const StartupSignup = () => {
     try {
       const { confirmPassword, ...dataToSubmit } = formData; // Remove confirmPassword from submission
       const response = await axios.post(
-        `${import.meta.env.VITE_API_URL}/api/auth/signup/startup`,
+        'http://localhost:8080/signup/startup',
         dataToSubmit
       );
-      if (response.data.token) {
-        localStorage.setItem('token', response.data.token);
+      if (response.data.id) {
+        localStorage.setItem('token', response.data.id);
         navigate('/dashboard/startup');
       }
     } catch (err) {

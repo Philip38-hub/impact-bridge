@@ -29,6 +29,7 @@ import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
 import SecurityIcon from '@mui/icons-material/Security';
 import SpeedIcon from '@mui/icons-material/Speed';
 import EmojiObjectsIcon from '@mui/icons-material/EmojiObjects';
+import axios from 'axios';
 import WebIcon from '@mui/icons-material/Web';
 import ConnectWithoutContactIcon from '@mui/icons-material/ConnectWithoutContact';
 import BusinessIcon from '@mui/icons-material/Business';
@@ -404,7 +405,7 @@ const LandingPage = () => {
   // Fetch startups and investors from the API
   const fetchStartups = async () => {
     try {
-      const response = await axios.get('/api/startups', { params: { limit: 10 } });
+      const response = await axios.get('http://localhost:8080/api/startups', { params: { limit: 10 } });
       startups.push(...response.data);
     } catch (error) {
       console.error('Error fetching startups:', error);
@@ -415,7 +416,7 @@ const LandingPage = () => {
 
   const fetchInvestors = async () => {
     try {
-      const response = await axios.get('/api/investors', { params: { limit: 10 } });
+      const response = await axios.get('http://localhost:8080/api/investors', { params: { limit: 10 } });
       investors.push(...response.data);
     } catch (error) {
       console.error('Error fetching investors:', error);

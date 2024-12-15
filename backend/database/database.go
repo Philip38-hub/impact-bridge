@@ -17,23 +17,24 @@ import (
 var db *sql.DB
 
 type Startups struct {
-	gorm.Model
 	// Core Business Information
-	Name                     string    `json:"name" gorm:"type:varchar(255);notnull"`
-	Email                    string    `json:"email" gorm:"type:varchar(255);notnull"`
-	Logo                     string    `json:"logo" gorm:"type:varchar(255)"`
-	ShortDescription         string    `json:"short_description" gorm:"type:text"`
-	Description              string    `json:"description" gorm:"type:text"`
-	Industry                 []string  `json:"industry" gorm:"type:json"`
-	FundingGoal              float64   `json:"funding_goal"gorm:"type:decimal(15,2)"`
-	Revenue                  float64   `json:"revenue"gorm:"type:decimal(15,2)"`
-	Valuation                float64   `json:"valuation"gorm:"type:decimal(15,2)"`
-	EquityOffered            float64   `json:"equity_offered"gorm:"type:decimal(10,2)"`
-	Location                 string    `json:"location" gorm:"type:varchar(255)"`
+	StartupName              string    `json:"name"`
+	FounderName              string    `json:""founder_name"`
+	Email                    string    `json:"email"`
+	Password                 string    `json:"password"`
+	Logo                     string    `json:"logo_url"`
+	ShortDescription         string    `json:"short_description"`
+	Description              string    `json:"description"`
+	Industry                 []string  `json:"industry"`
+	FundingGoal              float64   `json:"funding_goal"`
+	Revenue                  float64   `json:"revenue"`
+	Valuation                float64   `json:"valuation"`
+	EquityOffered            float64   `json:"equity_offered"`
+	Location                 string    `json:"location"`
 	FoundedAt                time.Time `json:"founded_at"`
 	UserID                   uint      `json:"user_id"`
-	Team                     string    `json:"team" gorm:"type:text"`
-	Traction                 string    `json:"traction" gorm:"type:text"`
+	Team                     string    `json:"team"`
+	Traction                 string    `json:"traction"`
 }
 
 type Investors struct {
@@ -233,9 +234,10 @@ func SignUpStartup(c *gin.Context) {
 
     // Bind JSON to the Startup struct
     if err := c.ShouldBindJSON(&startup); err != nil {
-        c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid input"})
-        return
-    }
+		log.Printf("Failed to bind JSON: %v", err)  // Log the error
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid input", "details": err.Error()})
+		return
+	}
 
     // Validate required fields
     if startup.Name == "" || startup.Email == "" || startup.Description == "" {
@@ -245,8 +247,8 @@ func SignUpStartup(c *gin.Context) {
 
     // Insert the startup into the database
     query := `INSERT INTO startups 
-        (name, email, description, industry, founded_at, revenue, logo, valuation, equity_offered, funding_goal, location) 
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+             (name, email, description, industry, founded_at, revenue, logo, valuation, equity_offered, funding_goal, location, user_id) 
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
 
     result, err := db.Exec(query, 
         startup.Name, 

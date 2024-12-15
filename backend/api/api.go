@@ -32,7 +32,7 @@ func FetchInvesters(c *gin.Context) {
 func FetchStartups(c *gin.Context) {
 	// Get the limit from query params
     limitStr := c.Query("limit")
-    limit := 10 // Default limit
+    limit := 50 // Default limit
     if limitStr != "" {
         var err error
         limit, err = strconv.Atoi(limitStr)

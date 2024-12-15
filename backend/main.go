@@ -21,8 +21,8 @@ func main() {
 	// API routes
 	router.GET("/login", auth.SignIn)
 	router.GET("/api/fetchdata", api.FetchData)
-	router.GET("api/investors", api.FetchInvesters)
-	router.GET("api/startups", api.FetchStartups)
+	router.GET("/api/investors", api.FetchInvesters)
+	router.GET("/api/startups", api.FetchStartups)
 	router.POST("/signup/startup", database.SignUpStartup)
 	router.POST("/signup/investor", auth.SignUpInvestor)
 
