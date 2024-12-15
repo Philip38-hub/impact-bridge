@@ -1,18 +1,30 @@
 package main
 
 import (
-	"impactbridge/server"
-	"log"
-	"net/http"
+	"fmt"
+	"impact_bridge/api"
+	"impact_bridge/auth"
+	"impact_bridge/database"
+
+	"github.com/gin-gonic/gin"
 )
 
 func main() {
-	router := server.Start()
-	port := ":8080"
+	// Start server
+	router := gin.Default()
 
-	log.Println("Starting server on port", port)
-	err := http.ListenAndServe(port, router)
-	if err != nil {
-		log.Fatal(err)
+	if !database.CheckUser() {
+		fmt.Println("Error connecting to database")
+		return
 	}
+
+	// API routes
+	router.GET("/login", auth.SignIn)
+	router.GET("/api/fetchdata", api.FetchData)
+	router.GET("api/investors", api.FetchInvesters)
+	router.GET("api/startups", api.FetchStartups)
+	router.POST("/signup/startup", database.SignUpStartup)
+	router.POST("/signup/investor", auth.SignUpInvestor)
+
+	router.Run(":8080")
 }
