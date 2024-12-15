@@ -26,6 +26,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import StartupContactModal from '../contact/StartupContactModal';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import StartupMatchingCards from './StartupMatchingCards';
 
 const StyledContainer = styled(Container)(({ theme }) => ({
   flex: 1,
@@ -199,33 +200,37 @@ const InvestorDashboard = () => {
 
       {/* Stats Section */}
       <Grid container spacing={3} sx={{ mb: 6 }}>
-        <Grid item xs={12} sm={6} md={3}>
+        <Grid item xs={12} md={3}>
           <StatCard>
-            <BusinessIcon sx={{ fontSize: 48, mb: 2 }} />
-            <Typography variant="h4" sx={{ fontWeight: 700 }}>{stats.totalStartups}</Typography>
+            <BusinessIcon sx={{ fontSize: 40, mb: 2 }} />
+            <Typography variant="h4" gutterBottom>
+              {stats.totalStartups}
+            </Typography>
             <Typography variant="subtitle1">Total Startups</Typography>
           </StatCard>
         </Grid>
-        <Grid item xs={12} sm={6} md={3}>
+        <Grid item xs={12} md={3}>
           <StatCard>
-            <CategoryIcon sx={{ fontSize: 48, mb: 2 }} />
-            <Typography variant="h4" sx={{ fontWeight: 700 }}>{stats.matchingStartups}</Typography>
-            <Typography variant="subtitle1">Matching Interests</Typography>
+            <CategoryIcon sx={{ fontSize: 40, mb: 2 }} />
+            <Typography variant="h4" gutterBottom>
+              {stats.matchingStartups}
+            </Typography>
+            <Typography variant="subtitle1">Matching Your Interests</Typography>
           </StatCard>
         </Grid>
-        <Grid item xs={12} sm={6} md={3}>
+        <Grid item xs={12} md={3}>
           <StatCard>
-            <MonetizationOnIcon sx={{ fontSize: 48, mb: 2 }} />
-            <Typography variant="h4" sx={{ fontWeight: 700 }}>
+            <MonetizationOnIcon sx={{ fontSize: 40, mb: 2 }} />
+            <Typography variant="h4" gutterBottom>
               ${(stats.totalInvestmentNeeded / 1000000).toFixed(1)}M
             </Typography>
             <Typography variant="subtitle1">Total Investment Needed</Typography>
           </StatCard>
         </Grid>
-        <Grid item xs={12} sm={6} md={3}>
+        <Grid item xs={12} md={3}>
           <StatCard>
-            <TrendingUpIcon sx={{ fontSize: 48, mb: 2 }} />
-            <Typography variant="h4" sx={{ fontWeight: 700 }}>
+            <TrendingUpIcon sx={{ fontSize: 40, mb: 2 }} />
+            <Typography variant="h4" gutterBottom>
               ${(stats.averageValuation / 1000000).toFixed(1)}M
             </Typography>
             <Typography variant="subtitle1">Average Valuation</Typography>
@@ -254,78 +259,7 @@ const InvestorDashboard = () => {
       <Typography variant="h5" sx={{ mb: 3, fontWeight: 600, color: '#008080' }}>
         Matching Startups
       </Typography>
-      <Grid container spacing={3}>
-        {startups.map((startup) => (
-          <Grid item xs={12} sm={6} md={4} key={startup._id}>
-            <StartupCard>
-              <Box display="flex" alignItems="center" mb={2}>
-                <Avatar 
-                  sx={{ 
-                    bgcolor: '#008080',
-                    width: 56,
-                    height: 56,
-                    mr: 2,
-                    fontSize: '1.5rem'
-                  }}
-                >
-                  {startup.startupName[0]}
-                </Avatar>
-                <Box>
-                  <Typography variant="h6" sx={{ fontWeight: 600 }}>
-                    {startup.startupName}
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    {startup.industry}
-                  </Typography>
-                </Box>
-              </Box>
-              
-              <Divider sx={{ my: 2 }} />
-              
-              <Typography variant="body2" sx={{ mb: 2, minHeight: 60 }}>
-                {startup.description?.slice(0, 120)}...
-              </Typography>
-              
-              <Box sx={{ mt: 'auto' }}>
-                <Grid container spacing={2} alignItems="center">
-                  <Grid item xs={12}>
-                    <Typography variant="subtitle2" color="text.secondary">
-                      Seeking: ${(startup.fundingNeeded / 1000000).toFixed(1)}M
-                    </Typography>
-                  </Grid>
-                </Grid>
-                
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
-                  <Box>
-                    <Tooltip title="Save for later">
-                      <IconButton size="small" sx={{ mr: 1 }}>
-                        <FavoriteIcon fontSize="small" />
-                      </IconButton>
-                    </Tooltip>
-                    <Tooltip title="Share">
-                      <IconButton size="small">
-                        <ShareIcon fontSize="small" />
-                      </IconButton>
-                    </Tooltip>
-                  </Box>
-                  <ActionButton
-                    variant="contained"
-                    onClick={() => handleContactClick(startup)}
-                    sx={{
-                      bgcolor: '#008080',
-                      '&:hover': {
-                        bgcolor: '#006666',
-                      },
-                    }}
-                  >
-                    Contact
-                  </ActionButton>
-                </Box>
-              </Box>
-            </StartupCard>
-          </Grid>
-        ))}
-      </Grid>
+      <StartupMatchingCards />
 
       {selectedStartup && (
         <StartupContactModal

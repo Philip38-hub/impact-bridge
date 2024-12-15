@@ -130,7 +130,7 @@ const SocialButton = styled(Button)(({ theme }) => ({
   }
 }));
 
-const LoginModal = ({ open, onClose }) => {
+const LoginModal = ({ open, handleClose }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -149,7 +149,7 @@ const LoginModal = ({ open, onClose }) => {
       console.log('Login successful:', user);
       
       if (user && user.type) {
-        onClose();
+        handleClose();
         navigate(`/dashboard/${user.type}`);
       } else {
         throw new Error('Invalid login response');
@@ -163,19 +163,19 @@ const LoginModal = ({ open, onClose }) => {
   };
 
   const handleSignupClick = (type) => {
-    onClose();
+    handleClose();
     navigate(`/signup/${type}`);
   };
 
   return (
     <Modal
       open={open}
-      onClose={onClose}
+      onClose={handleClose}
       aria-labelledby="login-modal"
       aria-describedby="login-form"
     >
       <ModalContainer>
-        <CloseButton onClick={onClose}>
+        <CloseButton onClick={handleClose}>
           <CloseIcon />
         </CloseButton>
 

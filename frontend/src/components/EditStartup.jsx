@@ -4,7 +4,7 @@ import { styled } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import axios from 'axios';
-import { industries } from '../utils/constants';
+import { industries, businessModels, businessStages } from '../utils/constants';
 
 const StyledPaper = styled(Box)(({ theme }) => ({
   backgroundColor: '#fff',
@@ -19,14 +19,23 @@ const EditStartup = () => {
   const { user } = useAuth();
   const [formData, setFormData] = useState({
     startupName: '',
+    founderName: '',
     industry: '',
+    businessModel: '',
+    businessStage: '',
+    location: '',
     description: '',
+    impactToSociety: '',
+    partners: '',
+    referees: '',
     fundingNeeded: '',
     revenue: '',
     valuation: '',
-    equityOffered: '',
-    team: '',
-    traction: '',
+    phone: '',
+    linkedin: '',
+    facebook: '',
+    whatsapp: '',
+    zoomId: '',
   });
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
@@ -35,14 +44,23 @@ const EditStartup = () => {
     if (user) {
       setFormData({
         startupName: user.startupName || '',
+        founderName: user.founderName || '',
         industry: user.industry || '',
+        businessModel: user.businessModel || '',
+        businessStage: user.businessStage || '',
+        location: user.location || '',
         description: user.description || '',
+        impactToSociety: user.impactToSociety || '',
+        partners: user.partners || '',
+        referees: user.referees || '',
         fundingNeeded: user.fundingNeeded || '',
         revenue: user.revenue || '',
         valuation: user.valuation || '',
-        equityOffered: user.equityOffered || '',
-        team: user.team || '',
-        traction: user.traction || '',
+        phone: user.phone || '',
+        linkedin: user.linkedin || '',
+        facebook: user.facebook || '',
+        whatsapp: user.whatsapp || '',
+        zoomId: user.zoomId || '',
       });
     }
   }, [user]);
@@ -109,7 +127,7 @@ const EditStartup = () => {
 
         <form onSubmit={handleSubmit}>
           <Grid container spacing={3}>
-            <Grid item xs={12}>
+            <Grid item xs={12} md={6}>
               <TextField
                 fullWidth
                 label="Startup Name"
@@ -120,7 +138,18 @@ const EditStartup = () => {
               />
             </Grid>
 
-            <Grid item xs={12}>
+            <Grid item xs={12} md={6}>
+              <TextField
+                fullWidth
+                label="Founder Name"
+                name="founderName"
+                value={formData.founderName}
+                onChange={handleChange}
+                required
+              />
+            </Grid>
+
+            <Grid item xs={12} md={6}>
               <TextField
                 fullWidth
                 select
@@ -138,6 +167,53 @@ const EditStartup = () => {
               </TextField>
             </Grid>
 
+            <Grid item xs={12} md={6}>
+              <TextField
+                fullWidth
+                select
+                label="Business Model"
+                name="businessModel"
+                value={formData.businessModel}
+                onChange={handleChange}
+                required
+              >
+                {businessModels.map((option) => (
+                  <MenuItem key={option} value={option}>
+                    {option}
+                  </MenuItem>
+                ))}
+              </TextField>
+            </Grid>
+
+            <Grid item xs={12} md={6}>
+              <TextField
+                fullWidth
+                select
+                label="Business Stage"
+                name="businessStage"
+                value={formData.businessStage}
+                onChange={handleChange}
+                required
+              >
+                {businessStages.map((option) => (
+                  <MenuItem key={option} value={option}>
+                    {option}
+                  </MenuItem>
+                ))}
+              </TextField>
+            </Grid>
+
+            <Grid item xs={12} md={6}>
+              <TextField
+                fullWidth
+                label="Location"
+                name="location"
+                value={formData.location}
+                onChange={handleChange}
+                required
+              />
+            </Grid>
+
             <Grid item xs={12}>
               <TextField
                 fullWidth
@@ -151,7 +227,44 @@ const EditStartup = () => {
               />
             </Grid>
 
+            <Grid item xs={12}>
+              <TextField
+                fullWidth
+                multiline
+                rows={4}
+                label="Impact to Society"
+                name="impactToSociety"
+                value={formData.impactToSociety}
+                onChange={handleChange}
+                required
+              />
+            </Grid>
+
             <Grid item xs={12} md={6}>
+              <TextField
+                fullWidth
+                multiline
+                rows={2}
+                label="Partners"
+                name="partners"
+                value={formData.partners}
+                onChange={handleChange}
+              />
+            </Grid>
+
+            <Grid item xs={12} md={6}>
+              <TextField
+                fullWidth
+                multiline
+                rows={2}
+                label="Referees"
+                name="referees"
+                value={formData.referees}
+                onChange={handleChange}
+              />
+            </Grid>
+
+            <Grid item xs={12} md={4}>
               <TextField
                 fullWidth
                 type="number"
@@ -163,7 +276,7 @@ const EditStartup = () => {
               />
             </Grid>
 
-            <Grid item xs={12} md={6}>
+            <Grid item xs={12} md={4}>
               <TextField
                 fullWidth
                 type="number"
@@ -174,7 +287,7 @@ const EditStartup = () => {
               />
             </Grid>
 
-            <Grid item xs={12} md={6}>
+            <Grid item xs={12} md={4}>
               <TextField
                 fullWidth
                 type="number"
@@ -185,71 +298,91 @@ const EditStartup = () => {
               />
             </Grid>
 
+            <Grid item xs={12}>
+              <Typography variant="h6" gutterBottom sx={{ color: '#006666', mt: 2 }}>
+                Contact Information
+              </Typography>
+            </Grid>
+
             <Grid item xs={12} md={6}>
               <TextField
                 fullWidth
-                type="number"
-                label="Equity Offered (%)"
-                name="equityOffered"
-                value={formData.equityOffered}
+                label="Phone Number"
+                name="phone"
+                value={formData.phone}
                 onChange={handleChange}
-                InputProps={{
-                  inputProps: { min: 0, max: 100 }
-                }}
+              />
+            </Grid>
+
+            <Grid item xs={12} md={6}>
+              <TextField
+                fullWidth
+                label="LinkedIn Profile"
+                name="linkedin"
+                value={formData.linkedin}
+                onChange={handleChange}
+              />
+            </Grid>
+
+            <Grid item xs={12} md={6}>
+              <TextField
+                fullWidth
+                label="Facebook Profile"
+                name="facebook"
+                value={formData.facebook}
+                onChange={handleChange}
+              />
+            </Grid>
+
+            <Grid item xs={12} md={6}>
+              <TextField
+                fullWidth
+                label="WhatsApp Number"
+                name="whatsapp"
+                value={formData.whatsapp}
+                onChange={handleChange}
               />
             </Grid>
 
             <Grid item xs={12}>
               <TextField
                 fullWidth
-                multiline
-                rows={3}
-                label="Team Description"
-                name="team"
-                value={formData.team}
+                label="Zoom ID"
+                name="zoomId"
+                value={formData.zoomId}
                 onChange={handleChange}
               />
             </Grid>
 
-            <Grid item xs={12}>
-              <TextField
-                fullWidth
-                multiline
-                rows={3}
-                label="Traction & Milestones"
-                name="traction"
-                value={formData.traction}
-                onChange={handleChange}
-              />
-            </Grid>
-
-            <Grid item xs={12} sx={{ display: 'flex', gap: 2, justifyContent: 'flex-end' }}>
-              <Button
-                variant="outlined"
-                onClick={handleCancel}
-                sx={{
-                  color: '#666',
-                  borderColor: '#666',
-                  '&:hover': {
-                    borderColor: '#444',
-                    color: '#444'
-                  }
-                }}
-              >
-                Cancel
-              </Button>
-              <Button
-                type="submit"
-                variant="contained"
-                sx={{
-                  bgcolor: '#008080',
-                  '&:hover': {
-                    bgcolor: '#006666'
-                  }
-                }}
-              >
-                Save Changes
-              </Button>
+            <Grid item xs={12} sx={{ mt: 3 }}>
+              <Box sx={{ display: 'flex', gap: 2, justifyContent: 'flex-end' }}>
+                <Button
+                  variant="outlined"
+                  onClick={handleCancel}
+                  sx={{
+                    color: '#006666',
+                    borderColor: '#006666',
+                    '&:hover': {
+                      borderColor: '#004c4c',
+                      backgroundColor: 'rgba(0, 102, 102, 0.04)',
+                    },
+                  }}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  type="submit"
+                  variant="contained"
+                  sx={{
+                    bgcolor: '#006666',
+                    '&:hover': {
+                      bgcolor: '#004c4c',
+                    },
+                  }}
+                >
+                  Save Changes
+                </Button>
+              </Box>
             </Grid>
           </Grid>
         </form>

@@ -6,8 +6,6 @@ import {
   Button, 
   Box, 
   IconButton, 
-  Menu, 
-  MenuItem,
   Tooltip,
   useScrollTrigger,
   Slide
@@ -104,7 +102,6 @@ function HideOnScroll({ children }) {
 
 const Header = () => {
   const [loginOpen, setLoginOpen] = useState(false);
-  const [anchorEl, setAnchorEl] = useState(null);
   const [isScrolled, setIsScrolled] = useState(false);
   const navigate = useNavigate();
   const { user, logout } = useAuth();
@@ -120,17 +117,13 @@ const Header = () => {
 
   const handleLoginOpen = () => setLoginOpen(true);
   const handleLoginClose = () => setLoginOpen(false);
-  const handleMenuOpen = (event) => setAnchorEl(event.currentTarget);
-  const handleMenuClose = () => setAnchorEl(null);
 
   const handleLogout = () => {
     logout();
-    handleMenuClose();
     navigate('/');
   };
 
   const handleProfileClick = () => {
-    handleMenuClose();
     navigate(`/dashboard/${user.type}`);
   };
 
@@ -156,6 +149,11 @@ const Header = () => {
                 <WelcomeText variant="body1">
                   Welcome, {getDisplayName()}
                 </WelcomeText>
+                <Tooltip title="Profile" arrow placement="bottom">
+                  <IconButtonStyled onClick={handleProfileClick}>
+                    <AccountCircleIcon />
+                  </IconButtonStyled>
+                </Tooltip>
                 <Tooltip title="Messages" arrow placement="bottom">
                   <IconButtonStyled>
                     <MessageIcon />
@@ -166,60 +164,21 @@ const Header = () => {
                     <SettingsIcon />
                   </IconButtonStyled>
                 </Tooltip>
-                <Tooltip title="Account Menu" arrow placement="bottom">
-                  <IconButtonStyled onClick={handleMenuOpen}>
-                    <AccountCircleIcon />
+                <Tooltip title="Logout" arrow placement="bottom">
+                  <IconButtonStyled onClick={handleLogout}>
+                    <LogoutIcon />
                   </IconButtonStyled>
                 </Tooltip>
-                <Menu
-                  anchorEl={anchorEl}
-                  open={Boolean(anchorEl)}
-                  onClose={handleMenuClose}
-                  PaperProps={{
-                    elevation: 3,
-                    sx: {
-                      mt: 1.5,
-                      borderRadius: 2,
-                      minWidth: 180,
-                      '& .MuiMenuItem-root': {
-                        padding: '10px 20px',
-                        borderRadius: 1,
-                        gap: 1,
-                        transition: 'background-color 0.2s ease',
-                        '&:hover': {
-                          backgroundColor: 'rgba(0, 128, 128, 0.1)',
-                        },
-                      },
-                    },
-                  }}
-                >
-                  <MenuItem onClick={handleProfileClick}>
-                    <AccountCircleIcon sx={{ color: '#008080' }} />
-                    Profile
-                  </MenuItem>
-                  <MenuItem onClick={handleMenuClose}>
-                    <SettingsIcon sx={{ color: '#008080' }} />
-                    Settings
-                  </MenuItem>
-                  {user.type === 'startup' && (
-                    <MenuItem onClick={handleMenuClose}>
-                      <MessageIcon sx={{ color: '#008080' }} />
-                      Messages
-                    </MenuItem>
-                  )}
-                  <MenuItem onClick={handleLogout}>
-                    <LogoutIcon sx={{ color: '#008080' }} />
-                    Logout
-                  </MenuItem>
-                </Menu>
               </>
             ) : (
               <AuthButton 
                 variant="contained" 
                 onClick={handleLoginOpen}
                 sx={{ 
-                  backgroundColor: '#008080',
-                  '&:hover': { backgroundColor: '#006666' }
+                  bgcolor: '#008080',
+                  '&:hover': {
+                    bgcolor: '#006666'
+                  }
                 }}
               >
                 <LoginIcon />
@@ -227,11 +186,9 @@ const Header = () => {
               </AuthButton>
             )}
           </Box>
+
+          <LoginModal open={loginOpen} handleClose={handleLoginClose} />
         </Toolbar>
-        <LoginModal 
-          open={loginOpen} 
-          onClose={handleLoginClose}
-        />
       </StyledAppBar>
     </HideOnScroll>
   );

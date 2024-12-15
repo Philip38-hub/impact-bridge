@@ -23,6 +23,7 @@ import GroupsIcon from '@mui/icons-material/Groups';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import styled from '@emotion/styled';
 import { keyframes } from '@emotion/react';
+import StartupContactModal from '../contact/StartupContactModal';
 
 const fadeIn = keyframes`
   from {
@@ -113,6 +114,7 @@ const StyledDialogTitle = styled(DialogTitle)`
 
 const StartupCard = ({ startup }) => {
   const [open, setOpen] = useState(false);
+  const [selectedStartup, setSelectedStartup] = useState(null);
   const { user } = useAuth();
   const theme = useTheme();
   const isInvestor = user?.type === 'investor';
@@ -120,9 +122,8 @@ const StartupCard = ({ startup }) => {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-  const handleInvest = () => {
-    // TODO: Implement investment flow
-    console.log('Invest in:', startup.name);
+  const handleContactClick = (startup) => {
+    setSelectedStartup(startup);
   };
 
   const metrics = [
@@ -188,25 +189,22 @@ const StartupCard = ({ startup }) => {
               mt: 'auto'
             }}
           >
-            <Typography 
-              variant="body2" 
-              color="primary"
-              sx={{ 
-                fontWeight: 600,
-                display: 'flex',
-                alignItems: 'center'
+            <Button
+              variant="contained"
+              onClick={() => handleContactClick(startup)}
+              fullWidth
+              sx={{
+                bgcolor: '#008080',
+                '&:hover': {
+                  bgcolor: '#006666',
+                },
+                borderRadius: '8px',
+                textTransform: 'none',
+                py: 1,
               }}
             >
-              View Details
-              <ArrowForwardIcon 
-                className="arrow-icon" 
-                sx={{ 
-                  ml: 1, 
-                  fontSize: 18,
-                  transition: 'all 0.3s ease'
-                }} 
-              />
-            </Typography>
+              Invest Now
+            </Button>
           </Box>
         </CardContent>
       </StyledCard>
@@ -214,104 +212,91 @@ const StartupCard = ({ startup }) => {
       <Dialog
         open={open}
         onClose={handleClose}
-        maxWidth="md"
+        maxWidth="sm"
         fullWidth
         PaperProps={{
           sx: {
             borderRadius: '16px',
-            overflow: 'hidden'
+            background: 'rgba(255, 255, 255, 0.95)',
+            backdropFilter: 'blur(10px)',
           }
         }}
       >
-        <StyledDialogTitle>{startup.name}</StyledDialogTitle>
-        <DialogContent sx={{ p: 4 }}>
-          <Grid container spacing={4}>
-            <Grid item xs={12} md={6}>
-              <img
-                src={startup.logo || 'https://via.placeholder.com/400x300'}
-                alt={startup.name}
-                style={{ 
-                  width: '100%', 
-                  borderRadius: '12px',
-                  boxShadow: '0 8px 24px rgba(0,0,0,0.12)'
-                }}
-              />
-              
-              <Box sx={{ mt: 4 }}>
-                {metrics.map((metric, index) => (
-                  <MetricBox key={index}>
-                    <Box className="metric-icon">
-                      {metric.icon}
-                    </Box>
-                    <Box>
-                      <Typography variant="body2" color="text.secondary">
-                        {metric.label}
-                      </Typography>
-                      <Typography variant="h6" sx={{ fontWeight: 600 }}>
-                        {metric.value}
-                      </Typography>
-                    </Box>
-                  </MetricBox>
-                ))}
-              </Box>
-            </Grid>
-            
-            <Grid item xs={12} md={6}>
-              <Typography variant="h6" gutterBottom sx={{ fontWeight: 600, color: '#008080' }}>
-                About
-              </Typography>
-              <Typography 
-                paragraph
-                sx={{ 
-                  mb: 4,
-                  lineHeight: 1.8,
-                  color: theme.palette.text.secondary
-                }}
-              >
-                {startup.description}
-              </Typography>
-              
-              <Typography variant="h6" gutterBottom sx={{ fontWeight: 600, color: '#008080' }}>
-                Team
-              </Typography>
-              <Typography 
-                paragraph
-                sx={{ 
-                  mb: 4,
-                  lineHeight: 1.8,
-                  color: theme.palette.text.secondary
-                }}
-              >
-                {startup.team}
-              </Typography>
+        <StyledDialogTitle>
+          {startup.name}
+        </StyledDialogTitle>
+        <DialogContent sx={{ p: 3 }}>
+          <Typography variant="body1" paragraph>
+            {startup.description}
+          </Typography>
 
-              <Typography variant="h6" gutterBottom sx={{ fontWeight: 600, color: '#008080' }}>
-                Traction
-              </Typography>
-              <Typography 
-                paragraph
-                sx={{ 
-                  lineHeight: 1.8,
-                  color: theme.palette.text.secondary
-                }}
-              >
-                {startup.traction}
-              </Typography>
-            </Grid>
+          <Grid container spacing={2} sx={{ mb: 3 }}>
+            {metrics.map((metric, index) => (
+              <Grid item xs={12} sm={4} key={index}>
+                <MetricBox>
+                  <IconButton 
+                    size="small" 
+                    sx={{ 
+                      mr: 1,
+                      color: '#008080',
+                      bgcolor: alpha('#008080', 0.1),
+                      '&:hover': {
+                        bgcolor: alpha('#008080', 0.2),
+                      }
+                    }}
+                  >
+                    {metric.icon}
+                  </IconButton>
+                  <Box>
+                    <Typography variant="caption" color="text.secondary">
+                      {metric.label}
+                    </Typography>
+                    <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>
+                      {metric.value}
+                    </Typography>
+                  </Box>
+                </MetricBox>
+              </Grid>
+            ))}
           </Grid>
+
+          <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 1 }}>
+            Team
+          </Typography>
+          <Typography variant="body2" paragraph>
+            {startup.team}
+          </Typography>
+
+          <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 1 }}>
+            Traction
+          </Typography>
+          <Typography variant="body2" paragraph>
+            {startup.traction}
+          </Typography>
         </DialogContent>
-        <DialogActions sx={{ p: 3, bgcolor: 'background.default' }}>
-          <Button onClick={handleClose} sx={{ borderRadius: '8px' }}>
+        <DialogActions sx={{ p: 3 }}>
+          <Button 
+            onClick={handleClose}
+            variant="outlined"
+            sx={{
+              borderRadius: '8px',
+              borderColor: '#008080',
+              color: '#008080',
+              '&:hover': {
+                borderColor: '#006666',
+                bgcolor: 'rgba(0,128,128,0.1)',
+              }
+            }}
+          >
             Close
           </Button>
           {isInvestor && (
             <Button 
-              onClick={handleInvest}
               variant="contained"
+              onClick={() => handleContactClick(startup)}
               sx={{
                 borderRadius: '8px',
                 background: 'linear-gradient(45deg, #008080, #00a0a0)',
-                px: 4,
                 '&:hover': {
                   background: 'linear-gradient(45deg, #006666, #008080)',
                 }
@@ -322,6 +307,14 @@ const StartupCard = ({ startup }) => {
           )}
         </DialogActions>
       </Dialog>
+
+      {selectedStartup && (
+        <StartupContactModal
+          open={Boolean(selectedStartup)}
+          startup={selectedStartup}
+          onClose={() => setSelectedStartup(null)}
+        />
+      )}
     </>
   );
 };
