@@ -84,10 +84,12 @@ const AddStartup = () => {
     try {
       const token = localStorage.getItem('token');
       await axios.post(
-        `${import.meta.env.VITE_API_URL}/api/startups`,
+        `http://loaclhost:8080/signup/startup`,
         formData,
         {
-          headers: { Authorization: `Bearer ${token}` }
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
       );
       

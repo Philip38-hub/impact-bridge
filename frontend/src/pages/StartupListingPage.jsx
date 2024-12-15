@@ -10,7 +10,7 @@ const StartupListingPage = () => {
   useEffect(() => {
     const fetchStartups = async () => {
       try {
-        const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/startups`);
+        const response = await axios.get('http://localhost:8080/api/startups');
         setStartups(response.data);
       } catch (error) {
         console.error('Error fetching startups:', error);

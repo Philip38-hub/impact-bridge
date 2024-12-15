@@ -10,7 +10,7 @@ const InvestorListingPage = () => {
   useEffect(() => {
     const fetchInvestors = async () => {
       try {
-        const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/investors`);
+        const response = await axios.get('https://localhost:8080/api/investors');
         setInvestors(response.data);
       } catch (error) {
         console.error('Error fetching investors:', error);
