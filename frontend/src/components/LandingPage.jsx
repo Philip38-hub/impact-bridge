@@ -412,280 +412,31 @@ const LandingPage = () => {
   };
 
   // Sample data for development
-  const startups = [
-    {
-      id: 1,
-      name: "EcoTech Solutions",
-      logo: "https://images.unsplash.com/photo-1483985974936-5a7a25c7c7c5?auto=format&fit=crop&w=300&h=140",
-      shortDescription: "Developing sustainable energy solutions for urban communities",
-      description: "EcoTech Solutions is pioneering innovative renewable energy technologies that make sustainable living accessible to urban communities. Our solutions combine solar power with AI-driven optimization.",
-      industry: "Clean Energy",
-      fundingGoal: "2000000",
-      revenue: "500000",
-      valuation: "10000000",
-      equityOffered: 15,
-      team: "Founded by Dr. Sarah Chen (PhD in Renewable Energy) and James Wilson (Former Tesla Engineer)",
-      traction: "Currently serving 5 communities with successful pilot programs showing 40% energy cost reduction"
-    },
-    {
-      id: 2,
-      name: "AgriSmart",
-      logo: "https://images.unsplash.com/photo-1534361960057-4a34a7a2fb14?auto=format&fit=crop&w=300&h=140",
-      shortDescription: "Smart farming solutions for sustainable agriculture",
-      description: "AgriSmart leverages IoT and AI to help farmers optimize crop yields while minimizing resource usage. Our system provides real-time monitoring and predictive analytics.",
-      industry: "AgTech",
-      fundingGoal: "1500000",
-      revenue: "300000",
-      valuation: "7000000",
-      equityOffered: 12,
-      team: "Led by Michael Brown (20 years in AgTech) and Dr. Emily Rodriguez (Agricultural Science)",
-      traction: "Partnership with 50+ farms, showing average yield increase of 25%"
-    },
-    {
-      id: 3,
-      name: "HealthAI",
-      logo: "https://images.unsplash.com/photo-1494790108377-85e24f1ff573?auto=format&fit=crop&w=300&h=140",
-      shortDescription: "AI-powered healthcare diagnostics platform",
-      description: "HealthAI is revolutionizing medical diagnostics with our AI-powered platform that helps doctors make faster, more accurate diagnoses.",
-      industry: "HealthTech",
-      fundingGoal: "3000000",
-      revenue: "800000",
-      valuation: "15000000",
-      equityOffered: 18,
-      team: "Founded by Dr. John Smith (Former Head of Radiology at Mayo Clinic) and Lisa Zhang (AI Expert)",
-      traction: "In use at 10 major hospitals with 95% accuracy rate in initial trials"
-    },
-    {
-      id: 4,
-      name: "EcoHarvest Solutions",
-      logo: "https://images.unsplash.com/photo-1534361960057-4a34a7a2fb14?auto=format&fit=crop&w=300&h=140",
-      shortDescription: "Smart agricultural solutions for sustainable farming practices",
-      description: "EcoHarvest Solutions provides innovative solutions to farmers, enabling them to optimize crop yields and reduce resource usage. Our system includes real-time monitoring and predictive analytics.",
-      industry: "AgTech",
-      fundingGoal: "1000000",
-      revenue: "200000",
-      valuation: "5000000",
-      equityOffered: 10,
-      team: "Led by Dr. Jane Doe (PhD in Agricultural Science) and Dr. Bob Smith (Former CEO of AgTech Solutions)",
-      traction: "In use at 20+ farms, showing average yield increase of 30%"
-    },
-    {
-      id: 5,
-      name: "GreenTech Solutions",
-      logo: "https://images.unsplash.com/photo-1534361960057-4a34a7a2fb14?auto=format&fit=crop&w=300&h=140",
-      shortDescription: "Developing sustainable technologies for renewable energy",
-      description: "GreenTech Solutions is pioneering innovative renewable energy technologies that make sustainable living accessible to urban communities. Our solutions combine solar power with AI-driven optimization.",
-      industry: "Clean Energy",
-      fundingGoal: "1500000",
-      revenue: "300000",
-      valuation: "7000000",
-      equityOffered: 12,
-      team: "Founded by Dr. Maria Rodriguez (PhD in Renewable Energy) and Dr. John Doe (Former CEO of Energy Solutions)",
-      traction: "Currently serving 3 communities with successful pilot programs showing 35% energy cost reduction"
-    },
-    {
-      id: 6,
-      name: "AgroTech Innovations",
-      logo: "https://images.unsplash.com/photo-1534361960057-4a34a7a2fb14?auto=format&fit=crop&w=300&h=140",
-      shortDescription: "Smart farming solutions for sustainable agriculture",
-      description: "AgroTech Innovations provides innovative solutions to farmers, enabling them to optimize crop yields while minimizing resource usage. Our system includes real-time monitoring and predictive analytics.",
-      industry: "AgTech",
-      fundingGoal: "2000000",
-      revenue: "400000",
-      valuation: "10000000",
-      equityOffered: 15,
-      team: "Led by Dr. Michael Brown (PhD in Agricultural Science) and Dr. Emily Chen (AI Expert)",
-      traction: "In use at 15+ farms, showing average yield increase of 45%"
-    },
-    {
-      id: 7,
-      name: "EduReach",
-      logo: "https://images.unsplash.com/photo-1534361960057-4a34a7a2fb14?auto=format&fit=crop&w=300&h=140",
-      shortDescription: "Digital education platform making learning accessible to all",
-      description: "EduReach is revolutionizing education with our AI-powered platform that helps teachers create personalized learning experiences for students.",
-      industry: "EdTech",
-      fundingGoal: "2500000",
-      revenue: "600000",
-      valuation: "15000000",
-      equityOffered: 18,
-      team: "Founded by Dr. Sarah Lee (PhD in Education) and Dr. John Chen (AI Expert)",
-      traction: "In use at 50+ schools, showing average student performance improvement of 20%"
-    },
-    {
-      id: 8,
-      name: "FoodTech Solutions",
-      logo: "https://images.unsplash.com/photo-1534361960057-4a34a7a2fb14?auto=format&fit=crop&w=300&h=140",
-      shortDescription: "Developing plant-based meat alternatives using sustainable ingredients",
-      description: "FoodTech Solutions is pioneering innovative plant-based meat alternatives that make sustainable living accessible to urban communities. Our solutions combine sustainable ingredients with AI-driven optimization.",
-      industry: "FoodTech",
-      fundingGoal: "3000000",
-      revenue: "800000",
-      valuation: "15000000",
-      equityOffered: 18,
-      team: "Founded by Dr. Jane Doe (PhD in Food Science) and Dr. Bob Smith (Former CEO of FoodTech Solutions)",
-      traction: "In use at 50+ restaurants, showing average sales increase of 30%"
-    },
-    {
-      id: 9,
-      name: "SmartWater Systems",
-      logo: "https://images.unsplash.com/photo-1534361960057-4a34a7a2fb14?auto=format&fit=crop&w=300&h=140",
-      shortDescription: "IoT-based water management solutions for efficient resource utilization",
-      description: "SmartWater Systems provides innovative solutions to farmers, enabling them to optimize crop yields while minimizing resource utilization. Our system includes real-time monitoring and predictive analytics.",
-      industry: "WaterTech",
-      fundingGoal: "2000000",
-      revenue: "400000",
-      valuation: "10000000",
-      equityOffered: 15,
-      team: "Led by Dr. Michael Brown (PhD in Hydrology) and Dr. Emily Chen (AI Expert)",
-      traction: "In use at 15+ farms, showing average yield increase of 40%"
-    }
-  ];
+  const startups = [];
+  const investors = [];
 
-  const investors = [
-    {
-      id: 1,
-      name: "Sarah Johnson",
-      photo: "https://images.unsplash.com/photo-1531427186611-ecfd6d936c79?auto=format&fit=crop&w=300&h=140",
-      title: "Impact Investment Partner",
-      background: "15+ years of experience in venture capital with a focus on sustainable technologies and social impact ventures.",
-      interests: ["Clean Energy", "AgTech", "Social Impact"],
-      minInvestment: "250000",
-      maxInvestment: "2000000",
-      portfolio: "Led investments in 20+ successful startups including GreenTech Solutions and SocialImpact AI",
-      email: "sarah.johnson@example.com",
-      linkedin: "https://linkedin.com/in/sarahjohnson"
-    },
-    {
-      id: 2,
-      name: "David Chen",
-      photo: "https://images.unsplash.com/photo-1494790108377-85e24f1ff573?auto=format&fit=crop&w=300&h=140",
-      title: "Angel Investor & Mentor",
-      background: "Serial entrepreneur turned investor with 3 successful exits. Passionate about mentoring early-stage startups.",
-      interests: ["HealthTech", "EdTech", "AI/ML"],
-      minInvestment: "100000",
-      maxInvestment: "1000000",
-      portfolio: "Early investor in HealthAI and EduTech Pioneers. Active mentor at Y Combinator.",
-      email: "david.chen@example.com",
-      linkedin: "https://linkedin.com/in/davidchen"
-    },
-    {
-      id: 3,
-      name: "Maria Rodriguez",
-      photo: "https://images.unsplash.com/photo-1534361960057-4a34a7a2fb14?auto=format&fit=crop&w=300&h=140",
-      title: "Sustainable Investment Director",
-      background: "Former Environmental Consultant with an MBA from Stanford. Focused on sustainable and renewable energy investments.",
-      interests: ["Renewable Energy", "Sustainable Agriculture", "Clean Tech"],
-      minInvestment: "500000",
-      maxInvestment: "5000000",
-      portfolio: "Portfolio companies have collectively reduced carbon emissions by 1M tons annually",
-      email: "maria.rodriguez@example.com",
-      linkedin: "https://linkedin.com/in/mariarodriguez"
-    },
-    {
-      id: 4,
-      name: "John Lee",
-      photo: "https://images.unsplash.com/photo-1525130413817-d45c1d127c42?auto=format&fit=crop&w=300&h=140",
-      title: "Impact Investor",
-      background: "10+ years of experience in venture capital with a focus on sustainable technologies and social impact ventures.",
-      interests: ["Clean Energy", "AgTech", "Social Impact"],
-      minInvestment: "250000",
-      maxInvestment: "2000000",
-      portfolio: "Led investments in 15+ successful startups including GreenTech Solutions and SocialImpact AI",
-      email: "john.lee@example.com",
-      linkedin: "https://linkedin.com/in/johnlee"
-    },
-    {
-      id: 5,
-      name: "Emily Chen",
-      photo: "https://images.unsplash.com/photo-1531711678821-21233fa099b1?auto=format&fit=crop&w=300&h=140",
-      title: "Angel Investor & Mentor",
-      background: "Serial entrepreneur turned investor with 2 successful exits. Passionate about mentoring early-stage startups.",
-      interests: ["HealthTech", "EdTech", "AI/ML"],
-      minInvestment: "100000",
-      maxInvestment: "1000000",
-      portfolio: "Early investor in HealthAI and EduTech Pioneers. Active mentor at Y Combinator.",
-      email: "emily.chen@example.com",
-      linkedin: "https://linkedin.com/in/emilychen"
-    },
-    {
-      id: 6,
-      name: "Michael Brown",
-      photo: "https://images.unsplash.com/photo-1552058544-f2b08422138a?auto=format&fit=crop&w=300&h=140",
-      title: "Sustainable Investment Director",
-      background: "Former Environmental Consultant with an MBA from Stanford. Focused on sustainable and renewable energy investments.",
-      interests: ["Renewable Energy", "Sustainable Agriculture", "Clean Tech"],
-      minInvestment: "500000",
-      maxInvestment: "5000000",
-      portfolio: "Portfolio companies have collectively reduced carbon emissions by 1M tons annually",
-      email: "michael.brown@example.com",
-      linkedin: "https://linkedin.com/in/michaelbrown"
-    },
-    {
-      id: 7,
-      name: "Jane Doe",
-      photo: "https://images.unsplash.com/photo-1531628486411-5edb890c9b4e?auto=format&fit=crop&w=300&h=140",
-      title: "Impact Investment Partner",
-      background: "15+ years of experience in venture capital with a focus on sustainable technologies and social impact ventures.",
-      interests: ["Clean Energy", "AgTech", "Social Impact"],
-      minInvestment: "250000",
-      maxInvestment: "2000000",
-      portfolio: "Led investments in 20+ successful startups including GreenTech Solutions and SocialImpact AI",
-      email: "jane.doe@example.com",
-      linkedin: "https://linkedin.com/in/janedoe"
-    },
-    {
-      id: 8,
-      name: "Bob Smith",
-      photo: "https://images.unsplash.com/photo-1534361960057-4a34a7a2fb14?auto=format&fit=crop&w=300&h=140",
-      title: "Angel Investor & Mentor",
-      background: "Serial entrepreneur turned investor with 3 successful exits. Passionate about mentoring early-stage startups.",
-      interests: ["HealthTech", "EdTech", "AI/ML"],
-      minInvestment: "100000",
-      maxInvestment: "1000000",
-      portfolio: "Early investor in HealthAI and EduTech Pioneers. Active mentor at Y Combinator.",
-      email: "bob.smith@example.com",
-      linkedin: "https://linkedin.com/in/bobsmith"
-    },
-    {
-      id: 9,
-      name: "Lisa Nguyen",
-      photo: "https://images.unsplash.com/photo-1525130413817-d45c1d127c42?auto=format&fit=crop&w=300&h=140",
-      title: "Sustainable Investment Director",
-      background: "Former Environmental Consultant with an MBA from Stanford. Focused on sustainable and renewable energy investments.",
-      interests: ["Renewable Energy", "Sustainable Agriculture", "Clean Tech"],
-      minInvestment: "500000",
-      maxInvestment: "5000000",
-      portfolio: "Portfolio companies have collectively reduced carbon emissions by 1M tons annually",
-      email: "lisa.nguyen@example.com",
-      linkedin: "https://linkedin.com/in/lisanguyen"
-    },
-    {
-      id: 10,
-      name: "David Kim",
-      photo: "https://images.unsplash.com/photo-1531711678821-21233fa099b1?auto=format&fit=crop&w=300&h=140",
-      title: "Impact Investor",
-      background: "10+ years of experience in venture capital with a focus on sustainable technologies and social impact ventures.",
-      interests: ["Clean Energy", "AgTech", "Social Impact"],
-      minInvestment: "250000",
-      maxInvestment: "2000000",
-      portfolio: "Led investments in 15+ successful startups including GreenTech Solutions and SocialImpact AI",
-      email: "david.kim@example.com",
-      linkedin: "https://linkedin.com/in/davidkim"
-    },
-    {
-      id: 11,
-      name: "Sophia Patel",
-      photo: "https://images.unsplash.com/photo-1552058544-f2b08422138a?auto=format&fit=crop&w=300&h=140",
-      title: "Angel Investor & Mentor",
-      background: "Serial entrepreneur turned investor with 2 successful exits. Passionate about mentoring early-stage startups.",
-      interests: ["HealthTech", "EdTech", "AI/ML"],
-      minInvestment: "100000",
-      maxInvestment: "1000000",
-      portfolio: "Early investor in HealthAI and EduTech Pioneers. Active mentor at Y Combinator.",
-      email: "sophia.patel@example.com",
-      linkedin: "https://linkedin.com/in/sophiapatel"
+  // Fetch startups and investors from the API
+  const fetchStartups = async () => {
+    try {
+      const response = await axios.get('/api/startups', { params: { limit: 10 } });
+      startups.push(...response.data);
+    } catch (error) {
+      console.error('Error fetching startups:', error);
     }
-  ];
+  };
+
+  fetchStartups();
+
+  const fetchInvestors = async () => {
+    try {
+      const response = await axios.get('/api/investors', { params: { limit: 10 } });
+      investors.push(...response.data);
+    } catch (error) {
+      console.error('Error fetching investors:', error);
+    }
+  }
+
+  fetchInvestors();
 
   const currentData = tabValue === 0 ? startups : investors;
   const totalPages = Math.ceil(currentData.length / itemsPerPage);

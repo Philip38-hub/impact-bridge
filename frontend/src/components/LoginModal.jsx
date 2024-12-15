@@ -145,12 +145,18 @@ const LoginModal = ({ open, handleClose }) => {
     setLoading(true);
 
     try {
-      const user = await login({ email, password });
+       // Call the SignIn API
+       const response = await axios.get('http://localhost:8080/login', {
+        params: { email, password }, // Pass email and password as query params
+      });
+
+
+      const user = response.data;
       console.log('Login successful:', user);
       
-      if (user && user.type) {
-        handleClose();
-        navigate(`/dashboard/${user.type}`);
+      if (user && user.class) {
+        onClose();
+        navigate(`/dashboard/${user.class}/${user.id}`);
       } else {
         throw new Error('Invalid login response');
       }
