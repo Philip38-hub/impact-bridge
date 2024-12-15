@@ -1,133 +1,98 @@
 import React, { useState } from 'react';
 import {
   Box,
-  Card,
-  CardContent,
-  CardMedia,
   Typography,
-  Button,
-  IconButton,
-  Chip,
   Grid,
   Pagination,
   Fade,
 } from '@mui/material';
-import { styled } from '@mui/material/styles';
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import ShareIcon from '@mui/icons-material/Share';
-import BusinessIcon from '@mui/icons-material/Business';
-import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
+import { useAuth } from '../../contexts/AuthContext';
+import StartupCard from '../cards/StartupCard';
 import StartupContactModal from '../contact/StartupContactModal';
-
-const StyledCard = styled(Card)(({ theme }) => ({
-  height: '100%',
-  display: 'flex',
-  flexDirection: 'column',
-  borderRadius: theme.spacing(2),
-  boxShadow: '0 8px 32px 0 rgba(31, 38, 135, 0.15)',
-  transition: 'transform 0.3s ease, box-shadow 0.3s ease',
-  '&:hover': {
-    transform: 'translateY(-8px)',
-    boxShadow: '0 12px 40px 0 rgba(31, 38, 135, 0.25)',
-  },
-}));
-
-const CardImageWrapper = styled(CardMedia)(({ theme }) => ({
-  paddingTop: '56.25%', // 16:9 aspect ratio
-  position: 'relative',
-  backgroundColor: '#f5f5f5',
-}));
-
-const CardOverlay = styled(Box)(({ theme }) => ({
-  position: 'absolute',
-  bottom: 0,
-  left: 0,
-  right: 0,
-  background: 'linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0) 100%)',
-  padding: theme.spacing(2),
-  display: 'flex',
-  justifyContent: 'space-between',
-  alignItems: 'flex-end',
-}));
-
-const StyledChip = styled(Chip)(({ theme }) => ({
-  margin: theme.spacing(0.5),
-  backgroundColor: 'rgba(0, 128, 128, 0.9)',
-  color: 'white',
-  '&:hover': {
-    backgroundColor: 'rgba(0, 128, 128, 1)',
-  },
-}));
+import LoginModal from '../LoginModal';
 
 const sampleStartups = [
   {
     id: 1,
     name: "EcoTech Solutions",
-    image: "https://source.unsplash.com/800x600/?sustainability",
+    logo: "https://source.unsplash.com/800x600/?sustainability",
     industry: "Clean Energy",
-    description: "Revolutionizing renewable energy storage solutions for sustainable future.",
+    shortDescription: "Revolutionizing renewable energy storage solutions for sustainable future.",
+    description: "EcoTech Solutions is pioneering innovative renewable energy technologies that make sustainable living accessible to urban communities. Our solutions combine solar power with AI-driven optimization.",
     fundingNeeded: 500000,
+    revenue: "300000",
+    valuation: "2000000",
+    equityOffered: 15,
     location: "Nairobi, Kenya",
   },
   {
     id: 2,
     name: "HealthBridge Africa",
-    image: "https://source.unsplash.com/800x600/?healthcare",
+    logo: "https://source.unsplash.com/800x600/?healthcare",
     industry: "Healthcare",
-    description: "Bringing affordable healthcare solutions to rural communities.",
+    shortDescription: "Bringing affordable healthcare solutions to rural communities.",
+    description: "HealthBridge Africa is revolutionizing healthcare access in rural communities through mobile clinics and telemedicine. Our platform connects patients with doctors remotely.",
     fundingNeeded: 750000,
+    revenue: "500000",
+    valuation: "3000000",
+    equityOffered: 20,
     location: "Lagos, Nigeria",
   },
   {
     id: 3,
     name: "AgroTech Innovations",
-    image: "https://source.unsplash.com/800x600/?agriculture",
+    logo: "https://source.unsplash.com/800x600/?agriculture",
     industry: "Agriculture",
-    description: "Smart farming solutions for small-scale farmers in Africa.",
+    shortDescription: "Smart farming solutions for small-scale farmers in Africa.",
+    description: "AgroTech Innovations provides smart farming solutions that help small-scale farmers optimize their crop yields and reduce resource usage through IoT sensors and AI analytics.",
     fundingNeeded: 300000,
+    revenue: "200000",
+    valuation: "1500000",
+    equityOffered: 12,
     location: "Accra, Ghana",
   },
   {
     id: 4,
     name: "EduReach",
-    image: "https://source.unsplash.com/800x600/?education",
+    logo: "https://source.unsplash.com/800x600/?education",
     industry: "Education",
-    description: "Digital education platform making learning accessible to all.",
+    shortDescription: "Digital education platform making learning accessible to all.",
+    description: "EduReach is democratizing education through an innovative digital platform that provides high-quality educational content to students in underserved communities.",
     fundingNeeded: 400000,
+    revenue: "250000",
+    valuation: "2000000",
+    equityOffered: 18,
     location: "Kampala, Uganda",
-  },
-  {
-    id: 5,
-    name: "FinTech Connect",
-    image: "https://source.unsplash.com/800x600/?finance",
-    industry: "Financial Technology",
-    description: "Innovative financial solutions for the unbanked population.",
-    fundingNeeded: 600000,
-    location: "Kigali, Rwanda",
-  },
-  {
-    id: 6,
-    name: "WaterPure Tech",
-    image: "https://source.unsplash.com/800x600/?water",
-    industry: "Clean Technology",
-    description: "Advanced water purification solutions for urban and rural areas.",
-    fundingNeeded: 450000,
-    location: "Dar es Salaam, Tanzania",
   },
 ];
 
 const StartupMatchingCards = () => {
   const [page, setPage] = useState(1);
   const [selectedStartup, setSelectedStartup] = useState(null);
+  const [showLoginModal, setShowLoginModal] = useState(false);
   const cardsPerPage = 3;
   const totalPages = Math.ceil(sampleStartups.length / cardsPerPage);
+  const { user } = useAuth();
+  const isInvestor = user?.type === 'investor';
+  const isLoggedIn = !!user;
 
   const handlePageChange = (event, value) => {
     setPage(value);
   };
 
   const handleContactClick = (startup) => {
+    if (!isLoggedIn) {
+      setShowLoginModal(true);
+      return;
+    }
+    if (!isInvestor) {
+      return;
+    }
     setSelectedStartup(startup);
+  };
+
+  const handleLoginClose = () => {
+    setShowLoginModal(false);
   };
 
   const getCurrentStartups = () => {
@@ -154,71 +119,12 @@ const StartupMatchingCards = () => {
         {getCurrentStartups().map((startup) => (
           <Grid item xs={12} md={4} key={startup.id}>
             <Fade in timeout={500}>
-              <StyledCard>
-                <CardImageWrapper
-                  image={startup.image}
-                  title={startup.name}
-                >
-                  <CardOverlay>
-                    <StyledChip
-                      icon={<BusinessIcon sx={{ color: 'white' }} />}
-                      label={startup.industry}
-                      size="small"
-                    />
-                    <Box>
-                      <IconButton size="small" sx={{ color: 'white' }}>
-                        <FavoriteIcon />
-                      </IconButton>
-                      <IconButton size="small" sx={{ color: 'white' }}>
-                        <ShareIcon />
-                      </IconButton>
-                    </Box>
-                  </CardOverlay>
-                </CardImageWrapper>
-                <CardContent sx={{ flexGrow: 1 }}>
-                  <Typography gutterBottom variant="h6" component="h2">
-                    {startup.name}
-                  </Typography>
-                  <Typography
-                    variant="body2"
-                    color="text.secondary"
-                    sx={{ mb: 2 }}
-                  >
-                    {startup.description}
-                  </Typography>
-                  <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-                    <MonetizationOnIcon sx={{ color: '#008080', mr: 1 }} />
-                    <Typography variant="body2" color="text.secondary">
-                      Funding Needed: ${startup.fundingNeeded.toLocaleString()}
-                    </Typography>
-                  </Box>
-                  <Typography
-                    variant="body2"
-                    color="text.secondary"
-                    sx={{ fontStyle: 'italic' }}
-                  >
-                    {startup.location}
-                  </Typography>
-                </CardContent>
-                <Box sx={{ p: 2, pt: 0 }}>
-                  <Button
-                    variant="contained"
-                    fullWidth
-                    onClick={() => handleContactClick(startup)}
-                    sx={{
-                      bgcolor: '#008080',
-                      '&:hover': {
-                        bgcolor: '#006666',
-                      },
-                      borderRadius: '8px',
-                      textTransform: 'none',
-                      py: 1,
-                    }}
-                  >
-                    Invest Now
-                  </Button>
-                </Box>
-              </StyledCard>
+              <Box>
+                <StartupCard 
+                  startup={startup}
+                  isStartupDashboard={false}
+                />
+              </Box>
             </Fade>
           </Grid>
         ))}
@@ -230,6 +136,7 @@ const StartupMatchingCards = () => {
           page={page}
           onChange={handlePageChange}
           color="primary"
+          size="large"
           sx={{
             '& .MuiPaginationItem-root': {
               color: '#008080',
@@ -249,6 +156,11 @@ const StartupMatchingCards = () => {
           onClose={() => setSelectedStartup(null)}
         />
       )}
+
+      <LoginModal 
+        open={showLoginModal} 
+        handleClose={handleLoginClose}
+      />
     </Box>
   );
 };

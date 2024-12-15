@@ -141,6 +141,13 @@ const SignUpButton = styled(Button)`
   height: 48px;
   display: flex;
   align-items: center;
+  white-space: nowrap;
+
+  @media (max-width: 600px) {
+    padding: 10px 24px;
+    font-size: 14px;
+    height: 42px;
+  }
 
   &:hover {
     transform: translateY(-2px);
@@ -166,6 +173,13 @@ const ViewCardsButton = styled(Button)`
   height: 48px;
   display: flex;
   align-items: center;
+  white-space: nowrap;
+
+  @media (max-width: 600px) {
+    padding: 10px 24px;
+    font-size: 14px;
+    height: 42px;
+  }
 
   &:hover {
     transform: translateY(-2px);
@@ -706,10 +720,13 @@ const LandingPage = () => {
           
           <Box sx={{ 
             display: 'flex', 
-            gap: 2, 
+            gap: { xs: 1, sm: 2 }, 
             justifyContent: 'center', 
             mt: 4,
-            alignItems: 'center' 
+            alignItems: 'center',
+            flexDirection: { xs: 'column', sm: 'row' },
+            width: '100%',
+            px: { xs: 2, sm: 0 }
           }}>
             {!user ? (
               <>

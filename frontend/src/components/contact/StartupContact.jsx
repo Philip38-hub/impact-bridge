@@ -15,7 +15,8 @@ import {
   TextField,
   CircularProgress,
   Tooltip,
-  Avatar
+  Avatar,
+  Alert,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import EmailIcon from '@mui/icons-material/Email';
@@ -24,8 +25,10 @@ import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import FacebookIcon from '@mui/icons-material/Facebook';
 import PhoneIcon from '@mui/icons-material/Phone';
 import VideocamIcon from '@mui/icons-material/Videocam';
+import LockIcon from '@mui/icons-material/Lock';
 import axios from 'axios';
 import { useAuth } from '../../contexts/AuthContext';
+import LoginModal from '../LoginModal';
 
 const StyledContainer = styled(Container)(({ theme }) => ({
   paddingTop: theme.spacing(4),
@@ -58,6 +61,7 @@ const StartupContact = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [openMeetingDialog, setOpenMeetingDialog] = useState(false);
+  const [showLoginModal, setShowLoginModal] = useState(false);
   const [meetingDetails, setMeetingDetails] = useState({
     date: '',
     time: '',
@@ -65,9 +69,18 @@ const StartupContact = () => {
     message: ''
   });
 
+  const isInvestor = user?.type === 'investor';
+  const isLoggedIn = !!user;
+
   useEffect(() => {
     const fetchStartup = async () => {
       try {
+        if (!isLoggedIn) {
+          setError('Please log in to view startup details');
+          setLoading(false);
+          return;
+        }
+
         const response = await axios.get(
           `${import.meta.env.VITE_API_URL}/api/startups/${id}`,
           {
@@ -87,17 +100,37 @@ const StartupContact = () => {
     };
 
     fetchStartup();
-  }, [id]);
+  }, [id, isLoggedIn]);
 
   const handleMeetingSubmit = async () => {
-    // Here you would typically send the meeting request to your backend
-    // For now, we'll just close the dialog
-    setOpenMeetingDialog(false);
-    // You could also show a success message
-    alert('Meeting request sent successfully!');
+    if (!isLoggedIn) {
+      setShowLoginModal(true);
+      return;
+    }
+    if (!isInvestor) {
+      setError('Only investors can schedule meetings');
+      return;
+    }
+    try {
+      // Here you would typically send the meeting request to your backend
+      setOpenMeetingDialog(false);
+      // You could also show a success message
+      alert('Meeting request sent successfully!');
+    } catch (err) {
+      setError('Failed to send meeting request. Please try again later.');
+    }
   };
 
   const handleContactClick = (method, value) => {
+    if (!isLoggedIn) {
+      setShowLoginModal(true);
+      return;
+    }
+    if (!isInvestor) {
+      setError('Only investors can contact startups');
+      return;
+    }
+
     switch (method) {
       case 'email':
         window.location.href = `mailto:${value}`;
@@ -119,11 +152,44 @@ const StartupContact = () => {
     }
   };
 
+  const handleLoginClose = () => {
+    setShowLoginModal(false);
+  };
+
   if (loading) {
     return (
       <Box display="flex" justifyContent="center" alignItems="center" minHeight="60vh">
         <CircularProgress />
       </Box>
+    );
+  }
+
+  if (!isLoggedIn) {
+    return (
+      <StyledContainer maxWidth="lg">
+        <Box display="flex" flexDirection="column" alignItems="center" gap={2} my={4}>
+          <LockIcon sx={{ fontSize: 48, color: 'text.secondary' }} />
+          <Typography variant="h5" align="center">
+            Please log in to view startup details
+          </Typography>
+          <Button
+            variant="contained"
+            onClick={() => setShowLoginModal(true)}
+            sx={{
+              bgcolor: '#008080',
+              '&:hover': {
+                bgcolor: '#006666',
+              },
+            }}
+          >
+            Login
+          </Button>
+          <LoginModal 
+            open={showLoginModal} 
+            handleClose={handleLoginClose}
+          />
+        </Box>
+      </StyledContainer>
     );
   }
 
@@ -158,85 +224,80 @@ const StartupContact = () => {
         </Grid>
       </Box>
 
+      {!isInvestor && (
+        <Alert severity="info" sx={{ mb: 3 }}>
+          Only investors can contact startups. Please update your profile type to investor to access contact features.
+        </Alert>
+      )}
+
       <Grid container spacing={3}>
         {/* Contact Methods */}
-        <Grid item xs={12} md={6}>
-          <ContactCard>
-            <Typography variant="h6" gutterBottom>
-              Contact Methods
-            </Typography>
-            <Grid container spacing={2}>
-              <Grid item>
-                <Tooltip title="Send Email">
-                  <ContactIcon
-                    onClick={() => handleContactClick('email', startup?.email)}
-                  >
-                    <EmailIcon />
-                  </ContactIcon>
-                </Tooltip>
+        {isInvestor && (
+          <Grid item xs={12} md={6}>
+            <ContactCard>
+              <Typography variant="h6" gutterBottom>
+                Contact Methods
+              </Typography>
+              <Grid container spacing={2}>
+                <Grid item>
+                  <Tooltip title="Send Email">
+                    <ContactIcon
+                      onClick={() => handleContactClick('email', startup?.email)}
+                    >
+                      <EmailIcon />
+                    </ContactIcon>
+                  </Tooltip>
+                </Grid>
+                <Grid item>
+                  <Tooltip title="WhatsApp">
+                    <ContactIcon
+                      onClick={() => handleContactClick('whatsapp', startup?.phone)}
+                    >
+                      <WhatsAppIcon />
+                    </ContactIcon>
+                  </Tooltip>
+                </Grid>
+                <Grid item>
+                  <Tooltip title="LinkedIn Profile">
+                    <ContactIcon
+                      onClick={() => handleContactClick('linkedin', startup?.linkedin)}
+                    >
+                      <LinkedInIcon />
+                    </ContactIcon>
+                  </Tooltip>
+                </Grid>
+                <Grid item>
+                  <Tooltip title="Facebook Page">
+                    <ContactIcon
+                      onClick={() => handleContactClick('facebook', startup?.facebook)}
+                    >
+                      <FacebookIcon />
+                    </ContactIcon>
+                  </Tooltip>
+                </Grid>
+                <Grid item>
+                  <Tooltip title="Phone Call">
+                    <ContactIcon
+                      onClick={() => handleContactClick('phone', startup?.phone)}
+                    >
+                      <PhoneIcon />
+                    </ContactIcon>
+                  </Tooltip>
+                </Grid>
+                <Grid item>
+                  <Tooltip title="Schedule Video Call">
+                    <ContactIcon onClick={() => setOpenMeetingDialog(true)}>
+                      <VideocamIcon />
+                    </ContactIcon>
+                  </Tooltip>
+                </Grid>
               </Grid>
-              <Grid item>
-                <Tooltip title="WhatsApp">
-                  <ContactIcon
-                    onClick={() => handleContactClick('whatsapp', startup?.phone)}
-                  >
-                    <WhatsAppIcon />
-                  </ContactIcon>
-                </Tooltip>
-              </Grid>
-              <Grid item>
-                <Tooltip title="LinkedIn Profile">
-                  <ContactIcon
-                    onClick={() => handleContactClick('linkedin', startup?.linkedin)}
-                  >
-                    <LinkedInIcon />
-                  </ContactIcon>
-                </Tooltip>
-              </Grid>
-              <Grid item>
-                <Tooltip title="Facebook Page">
-                  <ContactIcon
-                    onClick={() => handleContactClick('facebook', startup?.facebook)}
-                  >
-                    <FacebookIcon />
-                  </ContactIcon>
-                </Tooltip>
-              </Grid>
-              <Grid item>
-                <Tooltip title="Phone Call">
-                  <ContactIcon
-                    onClick={() => handleContactClick('phone', startup?.phone)}
-                  >
-                    <PhoneIcon />
-                  </ContactIcon>
-                </Tooltip>
-              </Grid>
-            </Grid>
-          </ContactCard>
-        </Grid>
-
-        {/* Schedule Meeting */}
-        <Grid item xs={12} md={6}>
-          <ContactCard>
-            <Typography variant="h6" gutterBottom>
-              Schedule a Meeting
-            </Typography>
-            <Box display="flex" alignItems="center" gap={2}>
-              <VideocamIcon color="primary" />
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={() => setOpenMeetingDialog(true)}
-                startIcon={<VideocamIcon />}
-              >
-                Schedule Zoom Meeting
-              </Button>
-            </Box>
-          </ContactCard>
-        </Grid>
+            </ContactCard>
+          </Grid>
+        )}
 
         {/* Startup Details */}
-        <Grid item xs={12}>
+        <Grid item xs={12} md={isInvestor ? 6 : 12}>
           <ContactCard>
             <Typography variant="h6" gutterBottom>
               Startup Details
@@ -244,85 +305,73 @@ const StartupContact = () => {
             <Typography variant="body1" paragraph>
               {startup?.description}
             </Typography>
-            <Grid container spacing={2}>
-              <Grid item xs={12} sm={4}>
-                <Typography variant="subtitle2" color="textSecondary">
-                  Funding Needed
-                </Typography>
-                <Typography variant="h6">
-                  ${startup?.fundingNeeded?.toLocaleString()}
-                </Typography>
-              </Grid>
-              <Grid item xs={12} sm={4}>
-                <Typography variant="subtitle2" color="textSecondary">
-                  Revenue
-                </Typography>
-                <Typography variant="h6">
-                  ${startup?.revenue?.toLocaleString()}
-                </Typography>
-              </Grid>
-              <Grid item xs={12} sm={4}>
-                <Typography variant="subtitle2" color="textSecondary">
-                  Valuation
-                </Typography>
-                <Typography variant="h6">
-                  ${startup?.valuation?.toLocaleString()}
-                </Typography>
-              </Grid>
-            </Grid>
+            <Box mt={2}>
+              <Typography variant="subtitle1" gutterBottom>
+                Investment Details
+              </Typography>
+              <Typography variant="body2" color="textSecondary">
+                Funding Goal: ${startup?.fundingGoal?.toLocaleString()}
+              </Typography>
+              <Typography variant="body2" color="textSecondary">
+                Equity Offered: {startup?.equityOffered}%
+              </Typography>
+            </Box>
           </ContactCard>
         </Grid>
       </Grid>
 
       {/* Meeting Dialog */}
-      <Dialog 
-        open={openMeetingDialog} 
-        onClose={() => setOpenMeetingDialog(false)}
-        maxWidth="sm"
-        fullWidth
-      >
-        <DialogTitle>Schedule a Zoom Meeting</DialogTitle>
+      <Dialog open={openMeetingDialog} onClose={() => setOpenMeetingDialog(false)}>
+        <DialogTitle>Schedule a Meeting</DialogTitle>
         <DialogContent>
-          <Box sx={{ pt: 2, display: 'flex', flexDirection: 'column', gap: 2 }}>
+          <Box sx={{ pt: 2 }}>
             <TextField
               label="Date"
               type="date"
+              fullWidth
               value={meetingDetails.date}
               onChange={(e) => setMeetingDetails({ ...meetingDetails, date: e.target.value })}
               InputLabelProps={{ shrink: true }}
-              fullWidth
+              sx={{ mb: 2 }}
             />
             <TextField
               label="Time"
               type="time"
+              fullWidth
               value={meetingDetails.time}
               onChange={(e) => setMeetingDetails({ ...meetingDetails, time: e.target.value })}
               InputLabelProps={{ shrink: true }}
-              fullWidth
+              sx={{ mb: 2 }}
             />
             <TextField
               label="Topic"
+              fullWidth
               value={meetingDetails.topic}
               onChange={(e) => setMeetingDetails({ ...meetingDetails, topic: e.target.value })}
-              fullWidth
+              sx={{ mb: 2 }}
             />
             <TextField
               label="Message"
-              value={meetingDetails.message}
-              onChange={(e) => setMeetingDetails({ ...meetingDetails, message: e.target.value })}
+              fullWidth
               multiline
               rows={4}
-              fullWidth
+              value={meetingDetails.message}
+              onChange={(e) => setMeetingDetails({ ...meetingDetails, message: e.target.value })}
             />
           </Box>
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setOpenMeetingDialog(false)}>Cancel</Button>
           <Button onClick={handleMeetingSubmit} variant="contained" color="primary">
-            Send Meeting Request
+            Send Request
           </Button>
         </DialogActions>
       </Dialog>
+
+      <LoginModal 
+        open={showLoginModal} 
+        handleClose={handleLoginClose}
+      />
     </StyledContainer>
   );
 };
