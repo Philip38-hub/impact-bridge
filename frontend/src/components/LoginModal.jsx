@@ -9,6 +9,9 @@ import {
   IconButton,
   Alert,
   InputAdornment,
+  Tabs,
+  Tab,
+  Stack,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import CloseIcon from '@mui/icons-material/Close';
@@ -17,6 +20,8 @@ import FacebookIcon from '@mui/icons-material/Facebook';
 import EmailIcon from '@mui/icons-material/Email';
 import LockIcon from '@mui/icons-material/Lock';
 import LoginIcon from '@mui/icons-material/Login';
+import BusinessIcon from '@mui/icons-material/Business';
+import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 
@@ -130,6 +135,7 @@ const LoginModal = ({ open, onClose }) => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [mode, setMode] = useState('login'); // 'login' or 'signup'
   const navigate = useNavigate();
   const { login } = useAuth();
 
@@ -162,6 +168,11 @@ const LoginModal = ({ open, onClose }) => {
     }
   };
 
+  const handleSignupClick = (type) => {
+    onClose();
+    navigate(`/signup/${type}`);
+  };
+
   return (
     <Modal
       open={open}
@@ -174,98 +185,191 @@ const LoginModal = ({ open, onClose }) => {
           <CloseIcon />
         </CloseButton>
 
-        <Typography
-          variant="h5"
-          sx={{
-            mb: 3,
-            fontFamily: 'Poppins',
-            fontWeight: 600,
-            color: '#008080',
-            textAlign: 'center'
-          }}
+        {/* Tabs for Login/Signup */}
+        <Tabs
+          value={mode}
+          onChange={(e, newValue) => setMode(newValue)}
+          sx={{ mb: 3 }}
+          centered
+          indicatorColor="primary"
+          textColor="primary"
         >
-          Welcome Back
-        </Typography>
-
-        {error && (
-          <Alert severity="error" sx={{ mb: 2 }}>
-            {error}
-          </Alert>
-        )}
-
-        <Form onSubmit={handleSubmit}>
-          <StyledTextField
-            required
-            fullWidth
-            label="Email"
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <EmailIcon sx={{ color: '#008080' }} />
-                </InputAdornment>
-              ),
+          <Tab 
+            label="Login" 
+            value="login"
+            sx={{ 
+              fontFamily: 'Poppins',
+              fontWeight: 500,
+              textTransform: 'none'
             }}
           />
-
-          <StyledTextField
-            required
-            fullWidth
-            label="Password"
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <LockIcon sx={{ color: '#008080' }} />
-                </InputAdornment>
-              ),
+          <Tab 
+            label="Sign Up" 
+            value="signup"
+            sx={{ 
+              fontFamily: 'Poppins',
+              fontWeight: 500,
+              textTransform: 'none'
             }}
           />
+        </Tabs>
 
-          <SubmitButton
-            type="submit"
-            variant="contained"
-            disabled={loading}
-            sx={{
-              backgroundColor: '#008080',
-              '&:hover': { backgroundColor: '#006666' }
-            }}
-          >
-            {loading ? 'Logging in...' : (
-              <>
-                <LoginIcon sx={{ mr: 1 }} />
-                Login
-              </>
+        {mode === 'login' ? (
+          <>
+            <Typography
+              variant="h5"
+              sx={{
+                mb: 3,
+                fontFamily: 'Poppins',
+                fontWeight: 600,
+                color: '#008080',
+                textAlign: 'center'
+              }}
+            >
+              Welcome Back
+            </Typography>
+
+            {error && (
+              <Alert severity="error" sx={{ mb: 2 }}>
+                {error}
+              </Alert>
             )}
-          </SubmitButton>
-        </Form>
 
-        <OrDivider>
-          <Divider className="MuiDivider-root" />
-          <Typography className="divider-text">or continue with</Typography>
-          <Divider className="MuiDivider-root" />
-        </OrDivider>
+            <Form onSubmit={handleSubmit}>
+              <StyledTextField
+                required
+                fullWidth
+                label="Email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <EmailIcon sx={{ color: '#008080' }} />
+                    </InputAdornment>
+                  ),
+                }}
+              />
 
-        <Box sx={{ display: 'flex', gap: 2 }}>
-          <SocialButton
-            variant="outlined"
-            startIcon={<GoogleIcon />}
-            sx={{ borderColor: '#008080', color: '#008080' }}
-          >
-            Google
-          </SocialButton>
-          <SocialButton
-            variant="outlined"
-            startIcon={<FacebookIcon />}
-            sx={{ borderColor: '#008080', color: '#008080' }}
-          >
-            Facebook
-          </SocialButton>
-        </Box>
+              <StyledTextField
+                required
+                fullWidth
+                label="Password"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <LockIcon sx={{ color: '#008080' }} />
+                    </InputAdornment>
+                  ),
+                }}
+              />
+
+              <SubmitButton
+                type="submit"
+                variant="contained"
+                fullWidth
+                disabled={loading}
+                startIcon={<LoginIcon />}
+              >
+                {loading ? 'Logging in...' : 'Login'}
+              </SubmitButton>
+            </Form>
+
+            <OrDivider>
+              <Divider className="MuiDivider-root" />
+              <Typography className="divider-text">or continue with</Typography>
+              <Divider className="MuiDivider-root" />
+            </OrDivider>
+
+            <SocialButton
+              variant="outlined"
+              startIcon={<GoogleIcon sx={{ color: '#DB4437' }} />}
+            >
+              Continue with Google
+            </SocialButton>
+
+            <SocialButton
+              variant="outlined"
+              startIcon={<FacebookIcon sx={{ color: '#4267B2' }} />}
+            >
+              Continue with Facebook
+            </SocialButton>
+          </>
+        ) : (
+          <>
+            <Typography
+              variant="h5"
+              sx={{
+                mb: 3,
+                fontFamily: 'Poppins',
+                fontWeight: 600,
+                color: '#008080',
+                textAlign: 'center'
+              }}
+            >
+              Join Impact Bridge
+            </Typography>
+
+            <Typography
+              variant="body1"
+              sx={{
+                mb: 3,
+                textAlign: 'center',
+                color: 'text.secondary'
+              }}
+            >
+              Choose your account type to get started
+            </Typography>
+
+            <Stack spacing={2}>
+              <Button
+                variant="outlined"
+                size="large"
+                startIcon={<BusinessIcon />}
+                onClick={() => handleSignupClick('startup')}
+                sx={{
+                  textTransform: 'none',
+                  fontFamily: 'Poppins',
+                  py: 1.5,
+                  borderRadius: 2,
+                  borderWidth: 2,
+                  '&:hover': {
+                    borderWidth: 2,
+                    transform: 'translateY(-2px)',
+                    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)'
+                  }
+                }}
+              >
+                Sign Up as a Startup
+              </Button>
+
+              <Button
+                variant="outlined"
+                size="large"
+                startIcon={<AccountBalanceIcon />}
+                onClick={() => handleSignupClick('investor')}
+                sx={{
+                  textTransform: 'none',
+                  fontFamily: 'Poppins',
+                  py: 1.5,
+                  borderRadius: 2,
+                  borderWidth: 2,
+                  '&:hover': {
+                    borderWidth: 2,
+                    transform: 'translateY(-2px)',
+                    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)'
+                  }
+                }}
+              >
+                Sign Up as an Investor
+              </Button>
+            </Stack>
+          </>
+        )}
       </ModalContainer>
     </Modal>
   );

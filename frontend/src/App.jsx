@@ -16,6 +16,7 @@ import InvestorDashboard from './components/dashboard/InvestorDashboard';
 import StartupListingPage from './pages/StartupListingPage';
 import InvestorListingPage from './pages/InvestorListingPage';
 import AddStartup from './components/AddStartup';
+import EditStartup from './components/EditStartup';
 import ProtectedRoute from './components/ProtectedRoute';
 import { AuthProvider } from './contexts/AuthContext';
 
@@ -69,6 +70,14 @@ function App() {
                     element={
                       <ProtectedRoute userType="startup">
                         <AddStartup />
+                      </ProtectedRoute>
+                    } 
+                  />
+                  <Route 
+                    path="/edit-startup" 
+                    element={
+                      <ProtectedRoute userType="startup">
+                        <EditStartup />
                       </ProtectedRoute>
                     } 
                   />
