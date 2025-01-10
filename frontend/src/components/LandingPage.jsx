@@ -16,9 +16,10 @@ import {
   InputAdornment,
   MenuItem,
   IconButton,
+  Slide,
+  useScrollTrigger
 } from '@mui/material';
 import styled from '@emotion/styled';
-import { keyframes } from '@emotion/react';
 import { keyframes } from '@emotion/react';
 import { useNavigate } from 'react-router-dom';
 import StartupCard from './cards/StartupCard';
@@ -80,10 +81,6 @@ const HeroSection = styled(Box)`
   background-size: 400% 400%;
   animation: ${gradientAnimation} 15s ease infinite;
   padding: 120px 0 80px;
-  background: linear-gradient(-45deg, #006666, #008080, #004C4C, #007373);
-  background-size: 400% 400%;
-  animation: ${gradientAnimation} 15s ease infinite;
-  padding: 120px 0 80px;
   text-align: center;
   color: white;
   position: relative;
@@ -99,23 +96,8 @@ const HeroSection = styled(Box)`
     background: radial-gradient(circle at center, transparent 0%, rgba(0,0,0,0.3) 100%);
     pointer-events: none;
   }
-  color: white;
-  position: relative;
-  overflow: hidden;
-
-  &::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: radial-gradient(circle at center, transparent 0%, rgba(0,0,0,0.3) 100%);
-    pointer-events: none;
-  }
 `;
 
-const AnimatedTitle = styled(Typography)`
 const AnimatedTitle = styled(Typography)`
   font-family: 'Montserrat', sans-serif;
   font-weight: 800;
@@ -130,36 +112,10 @@ const AnimatedTitle = styled(Typography)`
   @media (max-width: 600px) {
     font-size: 2.5rem;
   }
-  font-weight: 800;
-  font-size: 4rem;
-  margin-bottom: 24px;
-  background: linear-gradient(120deg, #FFFFFF 0%, #E0F2F2 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  animation: ${fadeIn} 1s ease-out;
-  text-shadow: 0 0 30px rgba(255,255,255,0.1);
-
-  @media (max-width: 600px) {
-    font-size: 2.5rem;
-  }
 `;
 
 const AnimatedSubtitle = styled(Typography)`
-const AnimatedSubtitle = styled(Typography)`
   font-family: 'Roboto', sans-serif;
-  color: #E0F2F2;
-  margin-bottom: 40px;
-  font-size: 1.5rem;
-  max-width: 800px;
-  margin-left: auto;
-  margin-right: auto;
-  animation: ${fadeIn} 1s ease-out 0.3s backwards;
-  line-height: 1.6;
-
-  @media (max-width: 600px) {
-    font-size: 1.2rem;
-    padding: 0 20px;
-  }
   color: #E0F2F2;
   margin-bottom: 40px;
   font-size: 1.5rem;
@@ -232,39 +188,9 @@ const ViewCardsButton = styled(Button)`
     transform: translateY(-2px);
     box-shadow: 0 4px 15px rgba(0,0,0,0.2);
     background: linear-gradient(45deg, #006666, #008080);
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-    background: linear-gradient(45deg, #006666, #008080);
   }
 
   &:active {
-    transform: translateY(0);
-  }
-`;
-
-const StatsSection = styled(Box)`
-  padding: 80px 0;
-  background: linear-gradient(135deg, #f5f7fa 0%, #ffffff 100%);
-  position: relative;
-`;
-
-const StatCard = styled(Paper)`
-  padding: 32px 24px;
-  text-align: center;
-  transition: all 0.3s ease;
-  height: 100%;
-  border-radius: 16px;
-  background: rgba(255, 255, 255, 0.9);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.5);
-  
-  &:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 10px 30px rgba(0,128,128,0.15);
-  }
-
-  .stat-icon {
-    animation: ${pulse} 2s infinite;
-    color: #008080;
     transform: translateY(0);
   }
 `;
@@ -298,15 +224,12 @@ const StatCard = styled(Paper)`
 
 const StyledTabs = styled(Tabs)`
   margin: 40px 0;
-  margin: 40px 0;
   
   .MuiTab-root {
     font-family: 'Poppins', sans-serif;
     font-size: 16px;
     text-transform: uppercase;
     letter-spacing: 1px;
-    min-width: 160px;
-    transition: all 0.3s ease;
     min-width: 160px;
     transition: all 0.3s ease;
     
@@ -318,143 +241,11 @@ const StyledTabs = styled(Tabs)`
     &:hover {
       color: #008080;
       opacity: 0.8;
-      font-weight: 600;
-    }
-
-    &:hover {
-      color: #008080;
-      opacity: 0.8;
     }
   }
   
   .MuiTabs-indicator {
     background-color: #008080;
-    height: 3px;
-    border-radius: 3px;
-  }
-`;
-
-const ValuePropSection = styled(Box)`
-  padding: 100px 0;
-  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-  position: relative;
-  overflow: hidden;
-
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 100%;
-    background: linear-gradient(45deg, rgba(0,128,128,0.05) 0%, transparent 100%);
-    transform: skewY(-6deg);
-    transform-origin: top left;
-  }
-`;
-
-const StartupValueSection = styled(Box)`
-  padding: 100px 0;
-  background: linear-gradient(135deg, #ffffff 0%, #f0f9f9 100%);
-  position: relative;
-  overflow: hidden;
-
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 100%;
-    background: linear-gradient(45deg, rgba(0,128,128,0.05) 0%, transparent 100%);
-    transform: skewY(6deg);
-    transform-origin: top right;
-  }
-`;
-
-const BenefitCard = styled(Paper)(({ theme }) => ({
-  padding: '2rem',
-  height: '100%',
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-  textAlign: 'center',
-  background: 'rgba(255, 255, 255, 0.8)',
-  backdropFilter: 'blur(10px)',
-  borderRadius: '16px',
-  transition: 'transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out',
-  '&:hover': {
-    transform: 'translateY(-5px)',
-    boxShadow: '0 8px 24px rgba(0, 0, 0, 0.15)',
-  },
-  '.benefit-icon': {
-    fontSize: '3rem',
-    marginBottom: '1.5rem',
-    color: '#006666',
-  },
-}));
-
-const FeatureCard = styled(Box)`
-  text-align: center;
-  padding: 40px 24px;
-  border-radius: 16px;
-  transition: all 0.3s ease;
-  position: relative;
-  z-index: 1;
-
-  &:hover {
-    transform: translateY(-5px);
-
-    .feature-icon {
-      transform: scale(1.1);
-      color: #008080;
-    }
-  }
-
-  .feature-icon {
-    font-size: 48px;
-    color: #006666;
-    margin-bottom: 24px;
-    transition: all 0.3s ease;
-  }
-`;
-
-const ContentContainer = styled(Container)`
-  animation: ${fadeIn} 1s ease-out;
-`;
-
-const CardsSection = styled(Box)`
-  padding: 80px 0;
-  background: linear-gradient(135deg, #ffffff 0%, #f0f9f9 100%);
-  min-height: 600px;
-`;
-
-const SearchFilterContainer = styled(Box)`
-  margin-bottom: 40px;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-`;
-
-const SearchBar = styled(TextField)`
-  .MuiOutlinedInput-root {
-    background: white;
-    border-radius: 50px;
-    
-    &:hover .MuiOutlinedInput-notchedOutline {
-      border-color: #008080;
-    }
-    
-    &.Mui-focused .MuiOutlinedInput-notchedOutline {
-      border-color: #008080;
-    }
-  }
-`;
-
-const FilterBar = styled(Box)`
-  display: flex;
-  gap: 16px;
-  flex-wrap: wrap;
     height: 3px;
     border-radius: 3px;
   }
@@ -920,7 +711,7 @@ const LandingPage = () => {
                   variant="outlined"
                   placeholder="Search..."
                   value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onChange={handleSearch}
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">
@@ -936,7 +727,7 @@ const LandingPage = () => {
                   fullWidth
                   variant="outlined"
                   value={selectedIndustry}
-                  onChange={(e) => setSelectedIndustry(e.target.value)}
+                  onChange={handleIndustryChange}
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">
@@ -955,12 +746,9 @@ const LandingPage = () => {
               </Grid>
             </Grid>
 
-            <Tabs
+            <StyledTabs
               value={tabValue}
-              onChange={(e, newValue) => {
-                setTabValue(newValue);
-                setPage(1);
-              }}
+              onChange={handleTabChange}
               centered
               sx={{ mb: 4 }}
             >
@@ -974,7 +762,7 @@ const LandingPage = () => {
                 icon={<BusinessIcon />} 
                 iconPosition="start"
               />
-            </Tabs>
+            </StyledTabs>
           </Box>
 
           <Grid container spacing={3}>
@@ -994,7 +782,7 @@ const LandingPage = () => {
               <Pagination
                 count={totalPages}
                 page={page}
-                onChange={(e, value) => setPage(value)}
+                onChange={handlePageChange}
                 color="primary"
               />
             </Box>

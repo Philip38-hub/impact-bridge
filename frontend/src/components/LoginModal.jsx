@@ -12,9 +12,6 @@ import {
   Tabs,
   Tab,
   Stack,
-  Tabs,
-  Tab,
-  Stack,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import CloseIcon from '@mui/icons-material/Close';
@@ -25,11 +22,8 @@ import LockIcon from '@mui/icons-material/Lock';
 import LoginIcon from '@mui/icons-material/Login';
 import BusinessIcon from '@mui/icons-material/Business';
 import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
-import BusinessIcon from '@mui/icons-material/Business';
-import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import axios from 'axios';
 import axios from 'axios';
 
 const ModalContainer = styled(Box)(({ theme }) => ({
@@ -130,7 +124,6 @@ const LoginModal = ({ open, handleClose }) => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [mode, setMode] = useState('login'); // 'login' or 'signup'
-  const [mode, setMode] = useState('login'); // 'login' or 'signup'
   const navigate = useNavigate();
   const { login } = useAuth();
 
@@ -217,77 +210,13 @@ const LoginModal = ({ open, handleClose }) => {
             >
               Welcome Back
             </Typography>
-        {/* Tabs for Login/Signup */}
-        <Tabs
-          value={mode}
-          onChange={(e, newValue) => setMode(newValue)}
-          sx={{ mb: 3 }}
-          centered
-          indicatorColor="primary"
-          textColor="primary"
-        >
-          <Tab 
-            label="Login" 
-            value="login"
-            sx={{ 
-              fontFamily: 'Poppins',
-              fontWeight: 500,
-              textTransform: 'none'
-            }}
-          />
-          <Tab 
-            label="Sign Up" 
-            value="signup"
-            sx={{ 
-              fontFamily: 'Poppins',
-              fontWeight: 500,
-              textTransform: 'none'
-            }}
-          />
-        </Tabs>
-
-        {mode === 'login' ? (
-          <>
-            <Typography
-              variant="h5"
-              sx={{
-                mb: 3,
-                fontFamily: 'Poppins',
-                fontWeight: 600,
-                color: '#008080',
-                textAlign: 'center'
-              }}
-            >
-              Welcome Back
-            </Typography>
 
             {error && (
               <Alert severity="error" sx={{ mb: 2 }}>
                 {error}
               </Alert>
             )}
-            {error && (
-              <Alert severity="error" sx={{ mb: 2 }}>
-                {error}
-              </Alert>
-            )}
 
-            <Form onSubmit={handleSubmit}>
-              <StyledTextField
-                required
-                fullWidth
-                label="Email"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <EmailIcon sx={{ color: '#008080' }} />
-                    </InputAdornment>
-                  ),
-                }}
-              />
             <Form onSubmit={handleSubmit}>
               <StyledTextField
                 required
@@ -320,21 +249,6 @@ const LoginModal = ({ open, handleClose }) => {
                   ),
                 }}
               />
-              <StyledTextField
-                required
-                fullWidth
-                label="Password"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <LockIcon sx={{ color: '#008080' }} />
-                    </InputAdornment>
-                  ),
-                }}
-              />
 
               <SubmitButton
                 type="submit"
@@ -346,22 +260,7 @@ const LoginModal = ({ open, handleClose }) => {
                 {loading ? 'Logging in...' : 'Login'}
               </SubmitButton>
             </Form>
-              <SubmitButton
-                type="submit"
-                variant="contained"
-                fullWidth
-                disabled={loading}
-                startIcon={<LoginIcon />}
-              >
-                {loading ? 'Logging in...' : 'Login'}
-              </SubmitButton>
-            </Form>
 
-            <OrDivider>
-              <Divider className="MuiDivider-root" />
-              <Typography className="divider-text">or continue with</Typography>
-              <Divider className="MuiDivider-root" />
-            </OrDivider>
             <OrDivider>
               <Divider className="MuiDivider-root" />
               <Typography className="divider-text">or continue with</Typography>

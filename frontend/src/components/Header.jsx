@@ -29,15 +29,6 @@ const StyledAppBar = styled(AppBar)(({ theme }) => ({
     boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)'
   }
 }));
-const StyledAppBar = styled(AppBar)(({ theme }) => ({
-  backgroundColor: 'white',
-  boxShadow: 'none',
-  borderBottom: '1px solid rgba(0, 0, 0, 0.1)',
-  transition: 'box-shadow 0.3s ease',
-  '&.elevated': {
-    boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)'
-  }
-}));
 
 const Logo = styled(Typography)(({ theme }) => ({
   fontFamily: 'Montserrat, sans-serif',
@@ -50,29 +41,9 @@ const Logo = styled(Typography)(({ theme }) => ({
   userSelect: 'none',
   '&:hover': {
     color: '#006666'
-const Logo = styled(Typography)(({ theme }) => ({
-  fontFamily: 'Montserrat, sans-serif',
-  color: '#008080',
-  fontWeight: 700,
-  fontSize: 24,
-  flexGrow: 1,
-  cursor: 'pointer',
-  transition: 'color 0.2s ease',
-  userSelect: 'none',
-  '&:hover': {
-    color: '#006666'
   }
-}));
 }));
 
-const WelcomeText = styled(Typography)(({ theme }) => ({
-  color: '#333',
-  marginRight: 16,
-  fontFamily: 'Poppins, sans-serif',
-  [theme.breakpoints.down('sm')]: {
-    display: 'none'
-  }
-}));
 const WelcomeText = styled(Typography)(({ theme }) => ({
   color: '#333',
   marginRight: 16,
@@ -94,52 +65,7 @@ const IconButtonStyled = styled(IconButton)(({ theme }) => ({
     transform: 'translateY(0)'
   }
 }));
-const IconButtonStyled = styled(IconButton)(({ theme }) => ({
-  color: '#008080',
-  margin: '0 4px',
-  transition: 'all 0.2s ease',
-  '&:hover': {
-    backgroundColor: 'rgba(0, 128, 128, 0.1)',
-    transform: 'translateY(-2px)'
-  },
-  '&:active': {
-    transform: 'translateY(0)'
-  }
-}));
 
-const AuthButton = styled(Button)(({ theme }) => ({
-  fontFamily: 'Poppins, sans-serif',
-  textTransform: 'none',
-  padding: '8px 20px',
-  borderRadius: 8,
-  transition: 'all 0.2s ease',
-  display: 'flex',
-  alignItems: 'center',
-  gap: 8,
-  '&:hover': {
-    transform: 'translateY(-2px)',
-    boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)'
-  },
-  '&:active': {
-    transform: 'translateY(0)',
-    boxShadow: 'none'
-  },
-  '.button-text': {
-    display: 'inline-block',
-    [theme.breakpoints.down('sm')]: {
-      display: 'none'
-    }
-  }
-}));
-
-function HideOnScroll({ children }) {
-  const trigger = useScrollTrigger();
-  return (
-    <Slide appear={false} direction="down" in={!trigger}>
-      {children}
-    </Slide>
-  );
-}
 const AuthButton = styled(Button)(({ theme }) => ({
   fontFamily: 'Poppins, sans-serif',
   textTransform: 'none',
@@ -189,14 +115,6 @@ const Header = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
   const handleLoginOpen = () => setLoginOpen(true);
   const handleLoginClose = () => setLoginOpen(false);
 
@@ -218,12 +136,6 @@ const Header = () => {
   };
 
   return (
-    <HideOnScroll>
-      <StyledAppBar position="sticky" className={isScrolled ? 'elevated' : ''}>
-        <Toolbar>
-          <Logo variant="h6" onClick={() => navigate('/')}>
-            Impact Bridge
-          </Logo>
     <HideOnScroll>
       <StyledAppBar position="sticky" className={isScrolled ? 'elevated' : ''}>
         <Toolbar>
