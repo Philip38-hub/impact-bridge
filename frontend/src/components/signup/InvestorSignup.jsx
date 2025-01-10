@@ -35,6 +35,9 @@ const InvestorSignup = () => {
     impactAreas: [],
     minimumInvestment: '',
     maximumInvestment: '',
+    investmentStage: '',
+    investmentPhilosophy: '',
+    referenceLinks: '',
   });
   const [error, setError] = useState('');
 

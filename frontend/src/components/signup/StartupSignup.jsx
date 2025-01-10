@@ -45,7 +45,8 @@ const StartupSignup = () => {
     }
 
     try {
-      const { confirmPassword, ...dataToSubmit } = formData; // Remove confirmPassword from submission
+      const dataToSubmit = { ...formData };
+      delete dataToSubmit.confirmPassword;
       const response = await axios.post(
         `${import.meta.env.VITE_API_URL}/api/auth/signup/startup`,
         dataToSubmit
