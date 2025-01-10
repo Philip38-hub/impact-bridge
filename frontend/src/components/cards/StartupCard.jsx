@@ -125,6 +125,7 @@ const StartupCard = ({ startup, isStartupDashboard = false }) => {
   const [showLoginModal, setShowLoginModal] = useState(false);
   const { user } = useAuth();
   const theme = useTheme();
+  const theme = useTheme();
   const isInvestor = user?.type === 'investor';
   const isLoggedIn = !!user;
 
@@ -273,7 +274,11 @@ const StartupCard = ({ startup, isStartupDashboard = false }) => {
       <StyledCard onClick={handleOpen}>
         <StyledCardMedia
           className="card-media"
+      <StyledCard onClick={handleOpen}>
+        <StyledCardMedia
+          className="card-media"
           component="img"
+          image={startup.logo || 'https://via.placeholder.com/300x200'}
           image={startup.logo || 'https://via.placeholder.com/300x200'}
           alt={startup.name}
         />
@@ -331,8 +336,12 @@ const StartupCard = ({ startup, isStartupDashboard = false }) => {
             <StyledChip 
               label={startup.industry} 
               size="medium"
+              size="medium"
               sx={{ mr: 1, mb: 1 }}
             />
+            <StyledChip 
+              label={`$${startup.fundingGoal} Goal`}
+              size="medium"
             <StyledChip 
               label={`$${startup.fundingGoal} Goal`}
               size="medium"
@@ -348,6 +357,7 @@ const StartupCard = ({ startup, isStartupDashboard = false }) => {
             </Alert>
           )}
         </CardContent>
+      </StyledCard>
       </StyledCard>
 
       <Dialog
