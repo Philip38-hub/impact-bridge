@@ -34,7 +34,7 @@ export const AuthProvider = ({ children }) => {
     try {
       console.log('Attempting login with:', { ...credentials, password: '****' });
       
-      const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/auth/login`, credentials);
+      const response = await axios.post('http://localhost:8080/login', credentials);
       console.log('Login response:', response.data);
       
       const { token, user: userData } = response.data;
