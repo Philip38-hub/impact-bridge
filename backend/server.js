@@ -29,10 +29,17 @@ mongoose.connect(process.env.MONGODB_URI, {
   serverSelectionTimeoutMS: 5000,
   socketTimeoutMS: 45000,
 })
+.then(() => {
+  console.log('Connected to MongoDB successfully');
+})
 .catch(err => {
   console.error('MongoDB connection error:', err);
   process.exit(1);
 });
 
-const PORT = process.env.PORT || 3001;
-app.listen(PORT);
+const PORT = process.env.PORT || 8080;
+
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+  console.log(`Frontend URL: ${process.env.FRONTEND_URL || 'http://localhost:5173'}`);
+});

@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
+import axios from 'axios';
 import { 
   Container, 
   Typography, 
@@ -372,20 +373,54 @@ const FilterBar = styled(Box)`
 `;
 
 const LandingPage = () => {
+  const theme = useTheme();
+  const { user } = useAuth();
+  const navigate = useNavigate();
   const [tabValue, setTabValue] = useState(0);
   const [page, setPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedIndustry, setSelectedIndustry] = useState('');
-  const navigate = useNavigate();
-  const { user } = useAuth();
-  const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const itemsPerPage = 6;
   const [showCards, setShowCards] = useState(false);
+  const [startups, setStartups] = useState([]);
+  const [investors, setInvestors] = useState([]);
 
   useEffect(() => {
-    window.scrollTo(0, 0);
+    const fetchData = async () => {
+      try {
+        const [startupsRes, investorsRes] = await Promise.all([
+          axios.get(`${import.meta.env.VITE_API_URL}/api/startups/featured`),
+          axios.get(`${import.meta.env.VITE_API_URL}/api/investors/featured`)
+        ]);
+        
+        setStartups(startupsRes.data);
+        setInvestors(investorsRes.data);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchData();
   }, []);
+
+  const filteredData = useMemo(() => {
+    const currentData = tabValue === 0 ? startups : investors;
+    return currentData.filter(item => {
+      const matchesSearch = searchQuery === '' || 
+        item.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        item.description?.toLowerCase().includes(searchQuery.toLowerCase());
+      
+      const matchesIndustry = selectedIndustry === '' || 
+        (item.industry && item.industry === selectedIndustry);
+
+      return matchesSearch && matchesIndustry;
+    });
+  }, [tabValue, startups, investors, searchQuery, selectedIndustry]);
+
+  const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+  const startIndex = (page - 1) * itemsPerPage;
+  const displayedData = filteredData.slice(startIndex, startIndex + itemsPerPage);
 
   const handleTabChange = (event, newValue) => {
     setTabValue(newValue);
@@ -409,52 +444,6 @@ const LandingPage = () => {
   const scrollToCards = () => {
     setShowCards(true);
     document.getElementById('cards-section').scrollIntoView({ behavior: 'smooth' });
-  };
-
-  // Sample data for development
-  const startups = [];
-  const investors = [];
-
-  // Fetch startups and investors from the API
-  const fetchStartups = async () => {
-    try {
-      const response = await axios.get('/api/startups', { params: { limit: 10 } });
-      startups.push(...response.data);
-    } catch (error) {
-      console.error('Error fetching startups:', error);
-    }
-  };
-
-  fetchStartups();
-
-  const fetchInvestors = async () => {
-    try {
-      const response = await axios.get('/api/investors', { params: { limit: 10 } });
-      investors.push(...response.data);
-    } catch (error) {
-      console.error('Error fetching investors:', error);
-    }
-  }
-
-  fetchInvestors();
-
-  const currentData = tabValue === 0 ? startups : investors;
-  const totalPages = Math.ceil(currentData.length / itemsPerPage);
-  const startIndex = (page - 1) * itemsPerPage;
-  const displayedData = currentData.slice(startIndex, startIndex + itemsPerPage);
-
-  // Filter data based on search query and industry
-  const filterData = (data) => {
-    return data.filter(item => {
-      const matchesSearch = searchQuery === '' || 
-        item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        item.description.toLowerCase().includes(searchQuery.toLowerCase());
-      
-      const matchesIndustry = selectedIndustry === '' || 
-        (item.industry && item.industry === selectedIndustry);
-
-      return matchesSearch && matchesIndustry;
-    });
   };
 
   return (
@@ -701,65 +690,85 @@ const LandingPage = () => {
         </ContentContainer>
       </StartupValueSection>
 
-      <CardsSection id="cards-section">
+      <Box id="cards-section" sx={{ py: 8, minHeight: '100vh' }}>
         <Container maxWidth="lg">
-          <Typography 
-            variant="h3" 
-            sx={{ 
-              mb: 4, 
-              textAlign: 'center', 
-              color: '#006666', 
-              fontWeight: 'bold' 
-            }}
-          >
-            Explore Opportunities
-          </Typography>
+          <Box sx={{ mb: 4 }}>
+            <Typography variant="h3" sx={{ mb: 2, textAlign: 'center' }}>
+              {tabValue === 0 ? 'Featured Startups' : 'Featured Investors'}
+            </Typography>
+            <Typography variant="subtitle1" sx={{ mb: 4, textAlign: 'center', color: 'text.secondary' }}>
+              {tabValue === 0 
+                ? 'Discover innovative startups making a difference' 
+                : 'Connect with investors who share your vision'}
+            </Typography>
 
-          <SearchFilterContainer>
-            <SearchBar
-              fullWidth
-              placeholder="Search by name or description..."
-              value={searchQuery}
-              onChange={handleSearch}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <SearchIcon sx={{ color: '#008080' }} />
-                  </InputAdornment>
-                ),
+            <Grid container spacing={2} sx={{ mb: 4 }}>
+              <Grid item xs={12} md={6}>
+                <TextField
+                  fullWidth
+                  variant="outlined"
+                  placeholder="Search..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <SearchIcon />
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <TextField
+                  select
+                  fullWidth
+                  variant="outlined"
+                  value={selectedIndustry}
+                  onChange={(e) => setSelectedIndustry(e.target.value)}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <FilterListIcon />
+                      </InputAdornment>
+                    ),
+                  }}
+                >
+                  <MenuItem value="">All Industries</MenuItem>
+                  {industries.map((industry) => (
+                    <MenuItem key={industry} value={industry}>
+                      {industry}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              </Grid>
+            </Grid>
+
+            <Tabs
+              value={tabValue}
+              onChange={(e, newValue) => {
+                setTabValue(newValue);
+                setPage(1);
               }}
-            />
-            <FilterBar>
-              <TextField
-                select
-                label="Industry"
-                value={selectedIndustry}
-                onChange={handleIndustryChange}
-                sx={{ minWidth: 200 }}
-              >
-                <MenuItem value="">All Industries</MenuItem>
-                {industries.map((industry) => (
-                  <MenuItem key={industry} value={industry}>
-                    {industry}
-                  </MenuItem>
-                ))}
-              </TextField>
-            </FilterBar>
-          </SearchFilterContainer>
-
-          <StyledTabs
-            value={tabValue}
-            onChange={handleTabChange}
-            centered
-            sx={{ mb: 4 }}
-          >
-            <Tab label="Startups" />
-            <Tab label="Investors" />
-          </StyledTabs>
+              centered
+              sx={{ mb: 4 }}
+            >
+              <Tab 
+                label="Startups" 
+                icon={<RocketLaunchIcon />} 
+                iconPosition="start"
+              />
+              <Tab 
+                label="Investors" 
+                icon={<BusinessIcon />} 
+                iconPosition="start"
+              />
+            </Tabs>
+          </Box>
 
           <Grid container spacing={3}>
-            {filterData(displayedData).map((item) => (
-              <Grid item xs={12} sm={6} md={4} key={item.id}>
+            {displayedData.map((item) => (
+              <Grid item xs={12} sm={6} md={4} key={item._id}>
                 {tabValue === 0 ? (
                   <StartupCard startup={item} />
                 ) : (
@@ -774,14 +783,13 @@ const LandingPage = () => {
               <Pagination
                 count={totalPages}
                 page={page}
-                onChange={handlePageChange}
+                onChange={(e, value) => setPage(value)}
                 color="primary"
-                size={isMobile ? 'small' : 'large'}
               />
             </Box>
           )}
         </Container>
-      </CardsSection>
+      </Box>
     </Box>
   );
 };

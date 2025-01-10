@@ -3,6 +3,25 @@ const router = express.Router();
 const User = require('../models/User');
 const auth = require('../middleware/auth');
 
+// Get featured startups (public endpoint)
+router.get('/featured', async (req, res) => {
+  try {
+    const startups = await User.find({ 
+      type: 'startup',
+      // Add any criteria for featuring startups
+      // For example: verified: true
+    })
+    .select('-password')
+    .sort({ createdAt: -1 })
+    .limit(6); // Limit to 6 featured startups
+
+    res.json(startups);
+  } catch (error) {
+    console.error('Error fetching featured startups:', error);
+    res.status(500).json({ message: 'Error fetching featured startups' });
+  }
+});
+
 // Get all startups with optional filtering
 router.get('/', auth, async (req, res) => {
   try {

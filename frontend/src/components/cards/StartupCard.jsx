@@ -304,7 +304,11 @@ const StartupCard = ({ startup, isStartupDashboard = false }) => {
                 fontWeight: 500
               }}
             >
-              {isStartupDashboard || isLoggedIn ? startup.shortDescription : `${startup.shortDescription.substring(0, 100)}... Login to read more`}
+              {isStartupDashboard || isLoggedIn 
+                ? startup?.shortDescription 
+                : startup?.shortDescription 
+                  ? `${startup.shortDescription.substring(0, 100)}... Login to read more`
+                  : 'Login to view startup description'}
             </Typography>
             <Typography
               variant="body2"

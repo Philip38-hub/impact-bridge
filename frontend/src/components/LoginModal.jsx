@@ -24,6 +24,7 @@ import BusinessIcon from '@mui/icons-material/Business';
 import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import axios from 'axios';
 
 const ModalContainer = styled(Box)(({ theme }) => ({
   position: 'absolute',
@@ -103,30 +104,17 @@ const SubmitButton = styled(Button)(({ theme }) => ({
 }));
 
 const SocialButton = styled(Button)(({ theme }) => ({
-  width: '100%',
-  padding: '12px',
-  marginBottom: '12px',
-  display: 'flex',
-  justifyContent: 'flex-start',
-  gap: '12px',
+  marginBottom: theme.spacing(1.5),
+  padding: '10px',
   textTransform: 'none',
-  border: '1px solid #e0e0e0',
-  borderRadius: '8px',
-  transition: 'all 0.2s ease',
   fontFamily: 'Poppins',
+  fontWeight: 500,
+  borderRadius: 8,
+  borderWidth: 2,
   '&:hover': {
-    backgroundColor: '#f5f5f5',
+    borderWidth: 2,
     transform: 'translateY(-2px)',
-    boxShadow: '0 2px 4px rgba(0, 0, 0, 0.05)'
-  },
-  '&:active': {
-    transform: 'translateY(0) scale(0.98)'
-  },
-  '& .MuiSvgIcon-root': {
-    transition: 'transform 0.2s ease'
-  },
-  '&:hover .MuiSvgIcon-root': {
-    transform: 'scale(1.1)'
+    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)'
   }
 }));
 
@@ -145,24 +133,18 @@ const LoginModal = ({ open, handleClose }) => {
     setLoading(true);
 
     try {
-       // Call the SignIn API
-       const response = await axios.get('http://localhost:8080/login', {
-        params: { email, password }, // Pass email and password as query params
-      });
-
-
-      const user = response.data;
-      console.log('Login successful:', user);
+      // Use the login function from AuthContext directly
+      const userData = await login({ email, password });
       
-      if (user && user.class) {
-        onClose();
-        navigate(`/dashboard/${user.class}/${user.id}`);
+      if (userData && userData.type) {
+        handleClose();
+        navigate(`/dashboard/${userData.type}`);
       } else {
         throw new Error('Invalid login response');
       }
     } catch (error) {
       console.error('Login error:', error);
-      setError(error.message || 'Login failed');
+      setError(error.message || 'Login failed. Please check your credentials.');
     } finally {
       setLoading(false);
     }
@@ -304,7 +286,7 @@ const LoginModal = ({ open, handleClose }) => {
             <Typography
               variant="h5"
               sx={{
-                mb: 3,
+                mb: 2,
                 fontFamily: 'Poppins',
                 fontWeight: 600,
                 color: '#008080',
@@ -317,15 +299,16 @@ const LoginModal = ({ open, handleClose }) => {
             <Typography
               variant="body1"
               sx={{
-                mb: 3,
+                mb: 4,
                 textAlign: 'center',
-                color: 'text.secondary'
+                color: 'text.secondary',
+                px: 2
               }}
             >
-              Choose your account type to get started
+              Create an account to connect with innovative startups or reach potential investors. Choose your account type below.
             </Typography>
 
-            <Stack spacing={2}>
+            <Stack spacing={2.5}>
               <Button
                 variant="outlined"
                 size="large"
@@ -334,13 +317,18 @@ const LoginModal = ({ open, handleClose }) => {
                 sx={{
                   textTransform: 'none',
                   fontFamily: 'Poppins',
+                  fontWeight: 500,
                   py: 1.5,
                   borderRadius: 2,
                   borderWidth: 2,
+                  borderColor: '#008080',
+                  color: '#008080',
                   '&:hover': {
                     borderWidth: 2,
+                    borderColor: '#006666',
+                    backgroundColor: 'rgba(0, 128, 128, 0.04)',
                     transform: 'translateY(-2px)',
-                    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)'
+                    boxShadow: '0 4px 12px rgba(0, 128, 128, 0.15)'
                   }
                 }}
               >
@@ -355,19 +343,36 @@ const LoginModal = ({ open, handleClose }) => {
                 sx={{
                   textTransform: 'none',
                   fontFamily: 'Poppins',
+                  fontWeight: 500,
                   py: 1.5,
                   borderRadius: 2,
                   borderWidth: 2,
+                  borderColor: '#008080',
+                  color: '#008080',
                   '&:hover': {
                     borderWidth: 2,
+                    borderColor: '#006666',
+                    backgroundColor: 'rgba(0, 128, 128, 0.04)',
                     transform: 'translateY(-2px)',
-                    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)'
+                    boxShadow: '0 4px 12px rgba(0, 128, 128, 0.15)'
                   }
                 }}
               >
                 Sign Up as an Investor
               </Button>
             </Stack>
+
+            <Typography
+              variant="body2"
+              sx={{
+                mt: 3,
+                textAlign: 'center',
+                color: 'text.secondary',
+                fontSize: '0.875rem'
+              }}
+            >
+              By signing up, you agree to our Terms of Service and Privacy Policy
+            </Typography>
           </>
         )}
       </ModalContainer>
