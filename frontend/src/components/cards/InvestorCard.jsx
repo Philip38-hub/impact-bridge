@@ -168,10 +168,10 @@ const InvestorCard = ({ investor }) => {
           </Box>
 
           <Box sx={{ mb: 2 }}>
-            {investor.interests.slice(0, 2).map((interest, index) => (
+            {investor.impactAreas && investor.impactAreas.slice(0, 2).map((area, index) => (
               <StyledChip 
                 key={index}
-                label={interest} 
+                label={area} 
                 size="medium"
                 sx={{ mr: 1, mb: 1 }}
               />
@@ -243,7 +243,7 @@ const InvestorCard = ({ investor }) => {
                   <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
                     <AccountBalanceWalletIcon sx={{ color: '#008080', mr: 1 }} />
                     <Typography>
-                      ${investor.minInvestment} - ${investor.maxInvestment}
+                      ${investor.minimumInvestment?.toLocaleString()} - ${investor.maximumInvestment?.toLocaleString()}
                     </Typography>
                   </Box>
                 </Box>
@@ -269,6 +269,24 @@ const InvestorCard = ({ investor }) => {
                     </ContactButton>
                   </Box>
                 </Box>
+
+                <Box sx={{ mb: 2 }}>
+                  <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+                    Organization:
+                  </Typography>
+                  <Typography variant="body1">
+                    {investor.organization}
+                  </Typography>
+                </Box>
+
+                <Box sx={{ mb: 2 }}>
+                  <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+                    Position:
+                  </Typography>
+                  <Typography variant="body1">
+                    {investor.position}
+                  </Typography>
+                </Box>
               </Box>
             </Grid>
             
@@ -291,10 +309,10 @@ const InvestorCard = ({ investor }) => {
                 Investment Focus
               </Typography>
               <Box sx={{ mb: 3 }}>
-                {investor.interests.map((interest, index) => (
+                {investor.impactAreas && investor.impactAreas.map((area, index) => (
                   <StyledChip 
                     key={index}
-                    label={interest} 
+                    label={area} 
                     sx={{ mr: 1, mb: 1 }}
                   />
                 ))}

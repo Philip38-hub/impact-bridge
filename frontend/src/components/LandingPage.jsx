@@ -381,7 +381,7 @@ const dummyStartups = [
     businessStage: 'Growth',
     impactToSociety: 'Providing renewable energy access to over 10,000 households',
     location: 'Nairobi, Kenya',
-    logo: 'https://via.placeholder.com/150',
+    logo: 'https://placehold.co/150',
     metrics: {
       impactScore: 85,
       sustainabilityScore: 90,
@@ -396,7 +396,7 @@ const dummyStartups = [
     businessStage: 'Early Growth',
     impactToSociety: 'Empowering farmers with technology to increase crop yields',
     location: 'Kampala, Uganda',
-    logo: 'https://via.placeholder.com/150',
+    logo: 'https://placehold.co/150',
     metrics: {
       impactScore: 82,
       sustainabilityScore: 85,
@@ -411,7 +411,7 @@ const dummyStartups = [
     businessStage: 'Seed',
     impactToSociety: 'Connecting rural communities with healthcare professionals',
     location: 'Dar es Salaam, Tanzania',
-    logo: 'https://via.placeholder.com/150',
+    logo: 'https://placehold.co/150',
     metrics: {
       impactScore: 88,
       sustainabilityScore: 78,
@@ -426,7 +426,7 @@ const dummyStartups = [
     businessStage: 'Growth',
     impactToSociety: 'Providing quality education to over 50,000 students',
     location: 'Kigali, Rwanda',
-    logo: 'https://via.placeholder.com/150',
+    logo: 'https://placehold.co/150',
     metrics: {
       impactScore: 90,
       sustainabilityScore: 85,
@@ -441,7 +441,7 @@ const dummyStartups = [
     businessStage: 'Early Growth',
     impactToSociety: 'Providing clean water access to rural communities',
     location: 'Addis Ababa, Ethiopia',
-    logo: 'https://via.placeholder.com/150',
+    logo: 'https://placehold.co/150',
     metrics: {
       impactScore: 92,
       sustainabilityScore: 95,
@@ -456,7 +456,7 @@ const dummyStartups = [
     businessStage: 'Growth',
     impactToSociety: 'Enabling financial access for over 100,000 users',
     location: 'Lagos, Nigeria',
-    logo: 'https://via.placeholder.com/150',
+    logo: 'https://placehold.co/150',
     metrics: {
       impactScore: 86,
       sustainabilityScore: 82,
@@ -471,7 +471,7 @@ const dummyStartups = [
     businessStage: 'Seed',
     impactToSociety: 'Reducing urban waste through innovative recycling',
     location: 'Nairobi, Kenya',
-    logo: 'https://via.placeholder.com/150',
+    logo: 'https://placehold.co/150',
     metrics: {
       impactScore: 88,
       sustainabilityScore: 94,
@@ -486,7 +486,7 @@ const dummyStartups = [
     businessStage: 'Growth',
     impactToSociety: 'Reducing carbon emissions through solar adoption',
     location: 'Mombasa, Kenya',
-    logo: 'https://via.placeholder.com/150',
+    logo: 'https://placehold.co/150',
     metrics: {
       impactScore: 89,
       sustainabilityScore: 92,
@@ -501,7 +501,7 @@ const dummyStartups = [
     businessStage: 'Early Growth',
     impactToSociety: 'Connecting farmers directly to markets',
     location: 'Arusha, Tanzania',
-    logo: 'https://via.placeholder.com/150',
+    logo: 'https://placehold.co/150',
     metrics: {
       impactScore: 84,
       sustainabilityScore: 88,
@@ -519,7 +519,7 @@ const dummyInvestors = [
     impactAreas: ['Clean Energy', 'Healthcare', 'Education'],
     minimumInvestment: 50000,
     maximumInvestment: 500000,
-    photo: 'https://via.placeholder.com/150',
+    photo: 'https://placehold.co/150',
     description: 'Focused on early-stage impact investments in East Africa'
   },
   {
@@ -530,7 +530,7 @@ const dummyInvestors = [
     impactAreas: ['AgTech', 'Clean Water', 'Renewable Energy'],
     minimumInvestment: 100000,
     maximumInvestment: 1000000,
-    photo: 'https://via.placeholder.com/150',
+    photo: 'https://placehold.co/150',
     description: 'Supporting sustainable businesses across Africa'
   },
   {
@@ -541,7 +541,7 @@ const dummyInvestors = [
     impactAreas: ['Education', 'Financial Inclusion', 'Healthcare'],
     minimumInvestment: 75000,
     maximumInvestment: 750000,
-    photo: 'https://via.placeholder.com/150',
+    photo: 'https://placehold.co/150',
     description: 'Investing in social innovation and technology'
   },
   {
@@ -552,7 +552,7 @@ const dummyInvestors = [
     impactAreas: ['Clean Energy', 'Waste Management', 'Sustainable Agriculture'],
     minimumInvestment: 200000,
     maximumInvestment: 2000000,
-    photo: 'https://via.placeholder.com/150',
+    photo: 'https://placehold.co/150',
     description: 'Investing in sustainable and environmentally conscious ventures'
   },
   {
@@ -563,7 +563,7 @@ const dummyInvestors = [
     impactAreas: ['EdTech', 'HealthTech', 'FinTech'],
     minimumInvestment: 150000,
     maximumInvestment: 1500000,
-    photo: 'https://via.placeholder.com/150',
+    photo: 'https://placehold.co/150',
     description: 'Supporting technology solutions for social impact'
   },
   {
@@ -574,7 +574,7 @@ const dummyInvestors = [
     impactAreas: ['Financial Inclusion', 'Healthcare', 'Education'],
     minimumInvestment: 300000,
     maximumInvestment: 3000000,
-    photo: 'https://via.placeholder.com/150',
+    photo: 'https://placehold.co/150',
     description: 'Driving sustainable development across Africa'
   },
   {
@@ -585,7 +585,7 @@ const dummyInvestors = [
     impactAreas: ['AgTech', 'Rural Development', 'Clean Water'],
     minimumInvestment: 50000,
     maximumInvestment: 500000,
-    photo: 'https://via.placeholder.com/150',
+    photo: 'https://placehold.co/150',
     description: 'Focusing on rural development and agricultural innovation'
   },
   {
@@ -596,7 +596,7 @@ const dummyInvestors = [
     impactAreas: ['Social Enterprise', 'Renewable Energy', 'Healthcare'],
     minimumInvestment: 100000,
     maximumInvestment: 1000000,
-    photo: 'https://via.placeholder.com/150',
+    photo: 'https://placehold.co/150',
     description: 'Investing in high-impact social enterprises'
   },
   {
@@ -607,7 +607,7 @@ const dummyInvestors = [
     impactAreas: ['Women Empowerment', 'Education', 'Financial Inclusion'],
     minimumInvestment: 75000,
     maximumInvestment: 750000,
-    photo: 'https://via.placeholder.com/150',
+    photo: 'https://placehold.co/150',
     description: 'Supporting women-led businesses and initiatives'
   }
 ];
