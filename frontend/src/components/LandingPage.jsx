@@ -406,6 +406,8 @@ const LandingPage = () => {
 
   const filteredData = useMemo(() => {
     const currentData = tabValue === 0 ? startups : investors;
+    if (!Array.isArray(currentData)) return [];
+    
     return currentData.filter(item => {
       const matchesSearch = searchQuery === '' || 
         item.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
