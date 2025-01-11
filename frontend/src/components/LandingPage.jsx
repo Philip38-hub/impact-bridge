@@ -381,7 +381,7 @@ const dummyStartups = [
     businessStage: 'Growth',
     impactToSociety: 'Providing renewable energy access to over 10,000 households',
     location: 'Nairobi, Kenya',
-    logo: 'https://placehold.co/150',
+    logo: 'https://images.unsplash.com/photo-1497435334941-8c899ee9e8e9?w=500&h=300&fit=crop',
     metrics: {
       impactScore: 85,
       sustainabilityScore: 90,
@@ -396,7 +396,7 @@ const dummyStartups = [
     businessStage: 'Early Growth',
     impactToSociety: 'Empowering farmers with technology to increase crop yields',
     location: 'Kampala, Uganda',
-    logo: 'https://placehold.co/150',
+    logo: 'https://images.unsplash.com/photo-1592982537447-6f2a6e0a3023?w=500&h=300&fit=crop',
     metrics: {
       impactScore: 82,
       sustainabilityScore: 85,
@@ -411,7 +411,7 @@ const dummyStartups = [
     businessStage: 'Seed',
     impactToSociety: 'Connecting rural communities with healthcare professionals',
     location: 'Dar es Salaam, Tanzania',
-    logo: 'https://placehold.co/150',
+    logo: 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=500&h=300&fit=crop',
     metrics: {
       impactScore: 88,
       sustainabilityScore: 78,
@@ -426,7 +426,7 @@ const dummyStartups = [
     businessStage: 'Growth',
     impactToSociety: 'Providing quality education to over 50,000 students',
     location: 'Kigali, Rwanda',
-    logo: 'https://placehold.co/150',
+    logo: 'https://images.unsplash.com/photo-1509062522246-3755977927d7?w=500&h=300&fit=crop',
     metrics: {
       impactScore: 90,
       sustainabilityScore: 85,
@@ -441,7 +441,7 @@ const dummyStartups = [
     businessStage: 'Early Growth',
     impactToSociety: 'Providing clean water access to rural communities',
     location: 'Addis Ababa, Ethiopia',
-    logo: 'https://placehold.co/150',
+    logo: 'https://images.unsplash.com/photo-1581092160562-40aa08e78837?w=500&h=300&fit=crop',
     metrics: {
       impactScore: 92,
       sustainabilityScore: 95,
@@ -456,7 +456,7 @@ const dummyStartups = [
     businessStage: 'Growth',
     impactToSociety: 'Enabling financial access for over 100,000 users',
     location: 'Lagos, Nigeria',
-    logo: 'https://placehold.co/150',
+    logo: 'https://images.unsplash.com/photo-1601597111158-2fceff292cdc?w=500&h=300&fit=crop',
     metrics: {
       impactScore: 86,
       sustainabilityScore: 82,
@@ -471,7 +471,7 @@ const dummyStartups = [
     businessStage: 'Seed',
     impactToSociety: 'Reducing urban waste through innovative recycling',
     location: 'Nairobi, Kenya',
-    logo: 'https://placehold.co/150',
+    logo: 'https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?w=500&h=300&fit=crop',
     metrics: {
       impactScore: 88,
       sustainabilityScore: 94,
@@ -486,7 +486,7 @@ const dummyStartups = [
     businessStage: 'Growth',
     impactToSociety: 'Reducing carbon emissions through solar adoption',
     location: 'Mombasa, Kenya',
-    logo: 'https://placehold.co/150',
+    logo: 'https://images.unsplash.com/photo-1509391366360-2e959784a276?w=500&h=300&fit=crop',
     metrics: {
       impactScore: 89,
       sustainabilityScore: 92,
@@ -501,7 +501,7 @@ const dummyStartups = [
     businessStage: 'Early Growth',
     impactToSociety: 'Connecting farmers directly to markets',
     location: 'Arusha, Tanzania',
-    logo: 'https://placehold.co/150',
+    logo: 'https://images.unsplash.com/photo-1500937386664-56d1dfef3854?w=500&h=300&fit=crop',
     metrics: {
       impactScore: 84,
       sustainabilityScore: 88,
@@ -519,7 +519,7 @@ const dummyInvestors = [
     impactAreas: ['Clean Energy', 'Healthcare', 'Education'],
     minimumInvestment: 50000,
     maximumInvestment: 500000,
-    photo: 'https://placehold.co/150',
+    photo: 'https://images.unsplash.com/photo-1560179707-f14e90ef3623?w=500&h=300&fit=crop',
     description: 'Focused on early-stage impact investments in East Africa'
   },
   {
@@ -530,7 +530,7 @@ const dummyInvestors = [
     impactAreas: ['AgTech', 'Clean Water', 'Renewable Energy'],
     minimumInvestment: 100000,
     maximumInvestment: 1000000,
-    photo: 'https://placehold.co/150',
+    photo: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=500&h=300&fit=crop',
     description: 'Supporting sustainable businesses across Africa'
   },
   {
@@ -541,7 +541,7 @@ const dummyInvestors = [
     impactAreas: ['Education', 'Financial Inclusion', 'Healthcare'],
     minimumInvestment: 75000,
     maximumInvestment: 750000,
-    photo: 'https://placehold.co/150',
+    photo: 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=500&h=300&fit=crop',
     description: 'Investing in social innovation and technology'
   },
   {
@@ -552,7 +552,7 @@ const dummyInvestors = [
     impactAreas: ['Clean Energy', 'Waste Management', 'Sustainable Agriculture'],
     minimumInvestment: 200000,
     maximumInvestment: 2000000,
-    photo: 'https://placehold.co/150',
+    photo: 'https://images.unsplash.com/photo-1504670073073-6123e39e0754?w=500&h=300&fit=crop',
     description: 'Investing in sustainable and environmentally conscious ventures'
   },
   {
@@ -563,7 +563,7 @@ const dummyInvestors = [
     impactAreas: ['EdTech', 'HealthTech', 'FinTech'],
     minimumInvestment: 150000,
     maximumInvestment: 1500000,
-    photo: 'https://placehold.co/150',
+    photo: 'https://images.unsplash.com/photo-1557804506-669a67965ba0?w=500&h=300&fit=crop',
     description: 'Supporting technology solutions for social impact'
   },
   {
@@ -574,7 +574,7 @@ const dummyInvestors = [
     impactAreas: ['Financial Inclusion', 'Healthcare', 'Education'],
     minimumInvestment: 300000,
     maximumInvestment: 3000000,
-    photo: 'https://placehold.co/150',
+    photo: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=500&h=300&fit=crop',
     description: 'Driving sustainable development across Africa'
   },
   {
@@ -585,7 +585,7 @@ const dummyInvestors = [
     impactAreas: ['AgTech', 'Rural Development', 'Clean Water'],
     minimumInvestment: 50000,
     maximumInvestment: 500000,
-    photo: 'https://placehold.co/150',
+    photo: 'https://images.unsplash.com/photo-1491336477066-31156b5e4f35?w=500&h=300&fit=crop',
     description: 'Focusing on rural development and agricultural innovation'
   },
   {
@@ -596,7 +596,7 @@ const dummyInvestors = [
     impactAreas: ['Social Enterprise', 'Renewable Energy', 'Healthcare'],
     minimumInvestment: 100000,
     maximumInvestment: 1000000,
-    photo: 'https://placehold.co/150',
+    photo: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=500&h=300&fit=crop',
     description: 'Investing in high-impact social enterprises'
   },
   {
@@ -607,7 +607,7 @@ const dummyInvestors = [
     impactAreas: ['Women Empowerment', 'Education', 'Financial Inclusion'],
     minimumInvestment: 75000,
     maximumInvestment: 750000,
-    photo: 'https://placehold.co/150',
+    photo: 'https://images.unsplash.com/photo-1573164713714-d95e436ab8d6?w=500&h=300&fit=crop',
     description: 'Supporting women-led businesses and initiatives'
   }
 ];
