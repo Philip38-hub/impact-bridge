@@ -372,6 +372,246 @@ const FilterBar = styled(Box)`
   flex-wrap: wrap;
 `;
 
+const dummyStartups = [
+  {
+    _id: '1',
+    startupName: 'EcoTech Solutions',
+    description: 'Developing sustainable energy solutions for rural communities',
+    industry: 'Clean Energy',
+    businessStage: 'Growth',
+    impactToSociety: 'Providing renewable energy access to over 10,000 households',
+    location: 'Nairobi, Kenya',
+    logo: 'https://via.placeholder.com/150',
+    metrics: {
+      impactScore: 85,
+      sustainabilityScore: 90,
+      innovationScore: 88
+    }
+  },
+  {
+    _id: '2',
+    startupName: 'AgroSmart Africa',
+    description: 'Smart farming solutions for small-scale farmers',
+    industry: 'AgTech',
+    businessStage: 'Early Growth',
+    impactToSociety: 'Empowering farmers with technology to increase crop yields',
+    location: 'Kampala, Uganda',
+    logo: 'https://via.placeholder.com/150',
+    metrics: {
+      impactScore: 82,
+      sustainabilityScore: 85,
+      innovationScore: 80
+    }
+  },
+  {
+    _id: '3',
+    startupName: 'HealthBridge',
+    description: 'Telemedicine platform for remote healthcare access',
+    industry: 'Healthcare',
+    businessStage: 'Seed',
+    impactToSociety: 'Connecting rural communities with healthcare professionals',
+    location: 'Dar es Salaam, Tanzania',
+    logo: 'https://via.placeholder.com/150',
+    metrics: {
+      impactScore: 88,
+      sustainabilityScore: 78,
+      innovationScore: 92
+    }
+  },
+  {
+    _id: '4',
+    startupName: 'EduTech Africa',
+    description: 'Digital learning platform for underserved communities',
+    industry: 'Education',
+    businessStage: 'Growth',
+    impactToSociety: 'Providing quality education to over 50,000 students',
+    location: 'Kigali, Rwanda',
+    logo: 'https://via.placeholder.com/150',
+    metrics: {
+      impactScore: 90,
+      sustainabilityScore: 85,
+      innovationScore: 87
+    }
+  },
+  {
+    _id: '5',
+    startupName: 'WaterPure Technologies',
+    description: 'Innovative water purification solutions',
+    industry: 'Clean Water',
+    businessStage: 'Early Growth',
+    impactToSociety: 'Providing clean water access to rural communities',
+    location: 'Addis Ababa, Ethiopia',
+    logo: 'https://via.placeholder.com/150',
+    metrics: {
+      impactScore: 92,
+      sustainabilityScore: 95,
+      innovationScore: 88
+    }
+  },
+  {
+    _id: '6',
+    startupName: 'FinAccess Solutions',
+    description: 'Mobile banking for unbanked populations',
+    industry: 'Financial Inclusion',
+    businessStage: 'Growth',
+    impactToSociety: 'Enabling financial access for over 100,000 users',
+    location: 'Lagos, Nigeria',
+    logo: 'https://via.placeholder.com/150',
+    metrics: {
+      impactScore: 86,
+      sustainabilityScore: 82,
+      innovationScore: 90
+    }
+  },
+  {
+    _id: '7',
+    startupName: 'WasteRecycle Pro',
+    description: 'Smart waste management and recycling solutions',
+    industry: 'Waste Management',
+    businessStage: 'Seed',
+    impactToSociety: 'Reducing urban waste through innovative recycling',
+    location: 'Nairobi, Kenya',
+    logo: 'https://via.placeholder.com/150',
+    metrics: {
+      impactScore: 88,
+      sustainabilityScore: 94,
+      innovationScore: 85
+    }
+  },
+  {
+    _id: '8',
+    startupName: 'SolarTech East Africa',
+    description: 'Affordable solar solutions for businesses',
+    industry: 'Clean Energy',
+    businessStage: 'Growth',
+    impactToSociety: 'Reducing carbon emissions through solar adoption',
+    location: 'Mombasa, Kenya',
+    logo: 'https://via.placeholder.com/150',
+    metrics: {
+      impactScore: 89,
+      sustainabilityScore: 92,
+      innovationScore: 86
+    }
+  },
+  {
+    _id: '9',
+    startupName: 'AgriConnect',
+    description: 'Digital marketplace for farmers',
+    industry: 'AgTech',
+    businessStage: 'Early Growth',
+    impactToSociety: 'Connecting farmers directly to markets',
+    location: 'Arusha, Tanzania',
+    logo: 'https://via.placeholder.com/150',
+    metrics: {
+      impactScore: 84,
+      sustainabilityScore: 88,
+      innovationScore: 83
+    }
+  }
+];
+
+const dummyInvestors = [
+  {
+    _id: '1',
+    name: 'Impact Ventures East Africa',
+    organization: 'Impact Ventures',
+    position: 'Managing Partner',
+    impactAreas: ['Clean Energy', 'Healthcare', 'Education'],
+    minimumInvestment: 50000,
+    maximumInvestment: 500000,
+    photo: 'https://via.placeholder.com/150',
+    description: 'Focused on early-stage impact investments in East Africa'
+  },
+  {
+    _id: '2',
+    name: 'Sustainable Growth Fund',
+    organization: 'SGF Partners',
+    position: 'Investment Director',
+    impactAreas: ['AgTech', 'Clean Water', 'Renewable Energy'],
+    minimumInvestment: 100000,
+    maximumInvestment: 1000000,
+    photo: 'https://via.placeholder.com/150',
+    description: 'Supporting sustainable businesses across Africa'
+  },
+  {
+    _id: '3',
+    name: 'Social Innovation Capital',
+    organization: 'SIC Fund',
+    position: 'Principal',
+    impactAreas: ['Education', 'Financial Inclusion', 'Healthcare'],
+    minimumInvestment: 75000,
+    maximumInvestment: 750000,
+    photo: 'https://via.placeholder.com/150',
+    description: 'Investing in social innovation and technology'
+  },
+  {
+    _id: '4',
+    name: 'Green Future Fund',
+    organization: 'GFF Investments',
+    position: 'CEO',
+    impactAreas: ['Clean Energy', 'Waste Management', 'Sustainable Agriculture'],
+    minimumInvestment: 200000,
+    maximumInvestment: 2000000,
+    photo: 'https://via.placeholder.com/150',
+    description: 'Investing in sustainable and environmentally conscious ventures'
+  },
+  {
+    _id: '5',
+    name: 'Tech4Good Capital',
+    organization: 'T4G Ventures',
+    position: 'Managing Director',
+    impactAreas: ['EdTech', 'HealthTech', 'FinTech'],
+    minimumInvestment: 150000,
+    maximumInvestment: 1500000,
+    photo: 'https://via.placeholder.com/150',
+    description: 'Supporting technology solutions for social impact'
+  },
+  {
+    _id: '6',
+    name: 'African Development Partners',
+    organization: 'ADP Group',
+    position: 'Partner',
+    impactAreas: ['Financial Inclusion', 'Healthcare', 'Education'],
+    minimumInvestment: 300000,
+    maximumInvestment: 3000000,
+    photo: 'https://via.placeholder.com/150',
+    description: 'Driving sustainable development across Africa'
+  },
+  {
+    _id: '7',
+    name: 'Rural Innovation Fund',
+    organization: 'RIF Capital',
+    position: 'Investment Manager',
+    impactAreas: ['AgTech', 'Rural Development', 'Clean Water'],
+    minimumInvestment: 50000,
+    maximumInvestment: 500000,
+    photo: 'https://via.placeholder.com/150',
+    description: 'Focusing on rural development and agricultural innovation'
+  },
+  {
+    _id: '8',
+    name: 'Social Impact Ventures',
+    organization: 'SIV Partners',
+    position: 'Director',
+    impactAreas: ['Social Enterprise', 'Renewable Energy', 'Healthcare'],
+    minimumInvestment: 100000,
+    maximumInvestment: 1000000,
+    photo: 'https://via.placeholder.com/150',
+    description: 'Investing in high-impact social enterprises'
+  },
+  {
+    _id: '9',
+    name: 'Women Empowerment Fund',
+    organization: 'WE Fund',
+    position: 'Executive Director',
+    impactAreas: ['Women Empowerment', 'Education', 'Financial Inclusion'],
+    minimumInvestment: 75000,
+    maximumInvestment: 750000,
+    photo: 'https://via.placeholder.com/150',
+    description: 'Supporting women-led businesses and initiatives'
+  }
+];
+
 const LandingPage = () => {
   const theme = useTheme();
   const { user } = useAuth();
@@ -389,15 +629,22 @@ const LandingPage = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [startupsRes, investorsRes] = await Promise.all([
-          axios.get(`${import.meta.env.VITE_API_URL}/api/startups/featured`),
-          axios.get(`${import.meta.env.VITE_API_URL}/api/investors/featured`)
-        ]);
+        // Comment out the API calls
+        // const [startupsResponse, investorsResponse] = await Promise.all([
+        //   axios.get(`${import.meta.env.VITE_API_URL}/api/startups/featured`),
+        //   axios.get(`${import.meta.env.VITE_API_URL}/api/investors/featured`)
+        // ]);
+        // setStartups(startupsResponse.data);
+        // setInvestors(investorsResponse.data);
         
-        setStartups(startupsRes.data);
-        setInvestors(investorsRes.data);
+        // Use dummy data instead
+        setStartups(dummyStartups);
+        setInvestors(dummyInvestors);
       } catch (error) {
         console.error('Error fetching data:', error);
+        // Fallback to dummy data on error
+        setStartups(dummyStartups);
+        setInvestors(dummyInvestors);
       }
     };
 
@@ -410,7 +657,7 @@ const LandingPage = () => {
     
     return currentData.filter(item => {
       const matchesSearch = searchQuery === '' || 
-        item.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        item.startupName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
         item.description?.toLowerCase().includes(searchQuery.toLowerCase());
       
       const matchesIndustry = selectedIndustry === '' || 
